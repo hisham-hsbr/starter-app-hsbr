@@ -11,12 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_settings', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('data');
-            $table->string('description')->nullable();
+            $table->string('code')->unique();
+            $table->string('title')->nullable();
+            $table->string('name')->nullable();
+            $table->date('posting_date')->nullable();
+            $table->date('starting_date')->nullable();
+            $table->date('ending_date')->nullable();
+            $table->text('data')->nullable();
+            $table->string('url')->nullable();
+            $table->string('type')->nullable();
+            $table->string('group')->nullable();
             $table->string('parent')->nullable();
+            $table->string('description')->nullable();
+            $table->string('edit_description')->nullable();
             $table->boolean('status')->nullable();
 
             // default
@@ -35,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app_settings');
+        Schema::dropIfExists('images');
     }
 };

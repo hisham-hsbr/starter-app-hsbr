@@ -117,10 +117,6 @@ implements MustVerifyEmail
 
     public function cityName()
     {
-        return $this->belongsTo(CountryStateDistrictCity::class, 'city_id', 'id');
-    }
-    public function blood()
-    {
-        return $this->belongsTo(Blood::class, 'blood_id', 'id');
+        return $this->belongsTo(Address::class, 'city_id', 'id');
     }
 }

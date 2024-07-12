@@ -10,10 +10,8 @@
 @endsection
 
 @section('headLinks')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet"
-        href="{{ asset('back_end_links/adminLinks/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --}}
+
 @endsection
 
 @section('actionTitle', 'Developer Settings')
@@ -46,10 +44,10 @@
 
                         <div class="">
                             {{-- @can('Create User') --}}
-                            <button type="submit" class="btn btn-primary float-right ml-1">Update</button>
+                            <button type="submit" class="float-right ml-1 btn btn-primary">Update</button>
                             {{-- @endcan --}}
                             <a type="button" href="{{ route('back-end.dashboard') }}"
-                                class="btn btn-warning float-right ml-1">Back</a>
+                                class="float-right ml-1 btn btn-warning">Back</a>
                         </div>
                         <!-- /.card-footer -->
                     </form>
@@ -68,7 +66,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('patch')
-                                <div class="col-12 mb-3">
+                                <div class="mb-3 col-12">
 
                                     <label class="form-label" for="customFile">Select your favicon</label>
 
@@ -100,7 +98,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('patch')
-                                <div class="col-12 mb-3">
+                                <div class="mb-3 col-12">
 
                                     <label class="form-label" for="customFile">Select your Application logo black</label>
 
@@ -132,7 +130,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('patch')
-                                <div class="col-12 mb-3">
+                                <div class="mb-3 col-12">
 
                                     <label class="form-label" for="customFile">Select your Application logo white</label>
 

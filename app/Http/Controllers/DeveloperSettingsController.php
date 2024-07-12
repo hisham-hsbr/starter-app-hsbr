@@ -17,55 +17,72 @@ class DeveloperSettingsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
     }
 
 
-    public function developerIndex()
+    public function developerSettingsIndex()
     {
         $application = DeveloperSettings::firstWhere('name', 'application');
         $page = DeveloperSettings::firstWhere('name', 'page');
         $developer = DeveloperSettings::firstWhere('name', 'developer');
 
-        return view('back_end.settings.developer_settings',compact('application','page','developer'));
+        // return view('back_end.settings.developer_settings', compact('application', 'page', 'developer'));
+
+        return view('back_end.settings.developer_settings')->with(
+            [
+                'application' => $application,
+                'page' => $page,
+                'developer' => $developer,
+            ]
+        );
     }
     public function faviconUpdate(request $request)
     {
 
-        $oldFavicon= 'images/app/favicon.png';
-        $file_name='favicon'.'.png';
-        $file=$request->file('favicon');
+        $oldFavicon = 'images/app/favicon.png';
+        $file_name = 'favicon' . '.png';
+        $file = $request->file('favicon');
         // delete old
         Storage::disk('public')->delete($oldFavicon);
         // update new
-        Storage::disk('public')->putFileAs('images/app',$file,$file_name);
+        Storage::disk('public')->putFileAs('images/app', $file, $file_name);
 
         return Redirect::route('developer-settings.index')->with('message_store', 'Favicon is updated');
     }
     public function logoBlackUpdate(request $request)
     {
 
-        $oldLogoBlack= 'images/app/logo_black.png';
-        $file_name='logo_black'.'.png';
-        $file=$request->file('logo_black');
+        $oldLogoBlack = 'images/app/logo_black.png';
+        $file_name = 'logo_black' . '.png';
+        $file = $request->file('logo_black');
         // delete old
         Storage::disk('public')->delete($oldLogoBlack);
         // update new
-        Storage::disk('public')->putFileAs('images/app',$file,$file_name);
+        Storage::disk('public')->putFileAs('images/app', $file, $file_name);
 
         return Redirect::route('developer-settings.index')->with('message_store', 'Logo black is updated');
     }
     public function logoWhiteUpdate(request $request)
     {
 
-        $oldLogoWhite= 'images/app/logo_white.png';
-        $file_name='logo_white'.'.png';
-        $file=$request->file('logo_white');
+        $oldLogoWhite = 'images/app/logo_white.png';
+        $file_name = 'logo_white' . '.png';
+        $file = $request->file('logo_white');
         // delete old
         Storage::disk('public')->delete($oldLogoWhite);
         // update new
-        Storage::disk('public')->putFileAs('images/app',$file,$file_name);
+        Storage::disk('public')->putFileAs('images/app', $file, $file_name);
 
         return Redirect::route('developer-settings.index')->with('message_store', 'Logo white is updated');
+    }
+
+    public function applicationSettingsIndex()
+    {
+        $application = DeveloperSettings::firstWhere('name', 'application');
+        $page = DeveloperSettings::firstWhere('name', 'page');
+        $developer = DeveloperSettings::firstWhere('name', 'developer');
+        $message = AppSettings::firstWhere('name', 'default message');
+
+        return view('back_end.settings.application_settings', compact('application', 'page', 'developer', 'message'));
     }
 }

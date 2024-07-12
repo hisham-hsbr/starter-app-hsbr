@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('developer_settings', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('data');
-            $table->string('description')->nullable();
-            $table->string('parent')->nullable();
+            $table->string('country');
+            $table->string('state');
+            $table->string('district');
+            $table->string('city');
+            $table->unsignedMediumInteger('zip_code')->length(5);
+
             $table->boolean('status')->nullable();
 
-            // default
             $table->unsignedBigInteger('created_by')->unsigned()->index()->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
 
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('developer_settings');
+        Schema::dropIfExists('addresses');
     }
 };

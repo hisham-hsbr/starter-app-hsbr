@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('country_state_district_cities', function (Blueprint $table) {
+        Schema::create('developers', function (Blueprint $table) {
             $table->id();
-            $table->string('country');
-            $table->string('state');
-            $table->string('district');
-            $table->string('city');
-            $table->unsignedMediumInteger('zip_code')->length(5);
-
+            $table->string('name')->unique();
+            $table->string('local_name')->nullable();
+            $table->string('description')->nullable();
+            $table->string('edit_description')->nullable();
             $table->boolean('status')->nullable();
 
+            // default
             $table->unsignedBigInteger('created_by')->unsigned()->index()->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
 
@@ -36,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('country_state_district_cities');
+        Schema::dropIfExists('developers');
     }
 };

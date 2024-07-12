@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
     //Developer Settings
-    Route::controller('DeveloperSettingsController')->prefix('/developer/settings/developer-settings')->name('developer-settings.')->group(function () {
-        Route::get('/', 'developerIndex')->name('index');
+    Route::controller('DeveloperSettingsController')->prefix('/developer')->name('settings.')->group(function () {
+        Route::get('/application-settings', 'applicationSettingsIndex')->name('application-settings.index');
+        Route::get('/', 'developerSettingsIndex')->name('developer-settings.index');
         Route::patch('/update', 'developerUpdate')->name('update');
         Route::patch('/favicon-update', 'faviconUpdate')->name('favicon-update');
         Route::patch('/logo-black-update', 'logoBlackUpdate')->name('logo-black-update');
@@ -25,12 +26,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('/update', 'update')->name('update');
     });
 
-        //Blood Bank Settings
-        Route::controller('AppSettingsController')->prefix('/admin/settings/blood-bank-settings')->name('blood-bank-settings.')->group(function () {
-            Route::get('/', 'bloodBankIndex')->name('index');
-            Route::patch('/update', 'bloodBankUpdate')->name('update');
-        });
-
-
-
+    //Blood Bank Settings
+    Route::controller('AppSettingsController')->prefix('/admin/settings/blood-bank-settings')->name('blood-bank-settings.')->group(function () {
+        Route::get('/', 'bloodBankIndex')->name('index');
+        Route::patch('/update', 'bloodBankUpdate')->name('update');
+    });
 });

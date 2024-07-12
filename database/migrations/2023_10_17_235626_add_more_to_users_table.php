@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedBigInteger('city_id')->unsigned()->index()->nullable();
-            $table->foreign('city_id')->references('id')->on('country_state_district_cities')->onDelete('cascade');
+            $table->foreign('city_id')->references('id')->on('addresses')->onDelete('cascade');
 
-            $table->unsignedBigInteger('blood_id')->unsigned()->index()->nullable();
-            $table->foreign('blood_id')->references('id')->on('bloods')->onDelete('cascade');
+            // $table->unsignedBigInteger('blood_id')->unsigned()->index()->nullable();
+            // $table->foreign('blood_id')->references('id')->on('bloods')->onDelete('cascade');
 
             $table->unsignedBigInteger('time_zone_id')->unsigned()->index()->nullable();
             $table->foreign('time_zone_id')->references('id')->on('time_zones')->onDelete('cascade');
