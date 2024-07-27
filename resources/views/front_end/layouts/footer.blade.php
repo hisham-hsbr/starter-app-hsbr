@@ -1,6 +1,6 @@
 <footer id="footer">
     <div class="container">
-        <x-app.application-logo-white width="112" />
+        <x-app.application-logo-dark width="112" />
         </p>
         <div class="social-links">
             {{-- <a href="#" target="_blank" class="twitter"><i class="bx bxl-twitter"></i></a> --}}
@@ -14,8 +14,10 @@
             {{-- <a href="#" target="_blank" class="linkedin"><i class="bx bxl-linkedin"></i></a> --}}
         </div>
         <div class="copyright">
-            <p>Copyright &copy; {{ $developer->data['starting_year'] }}-<?php echo date('Y'); ?> <a
-                    href="{{ $developer->data['website'] }}" target="_blank">{{ $developer->data['name'] }}</a>.</p>
+            <p>Copyright &copy; {{ $settings['developer_app_starting_year'] }}-<?php echo date('Y'); ?> <a
+                    href="{{ $settings['developer_company_website'] }}"
+                    target="_blank">{{ $settings['developer_company_name'] }}</a>.
+            </p>
             All rights reserved.
         </div>
 

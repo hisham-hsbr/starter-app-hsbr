@@ -12,8 +12,8 @@
         <div class="container d-flex align-items-center justify-content-between">
 
             <div class="logo">
-                @if ($logo->data['sidebar_logo'] == 1)
-                    <x-app.application-logo-white width="112" />
+                @if ($settings['logo_sidebar'] == 1)
+                    <x-app.application-logo-dark width="112" />
                 @endif
                 </a>
             </div>

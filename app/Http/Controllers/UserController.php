@@ -5,19 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Blood;
 use App\Models\TimeZone;
+use Illuminate\Support\Arr;
+use App\Imports\UsersImport;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Arr;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
+    private $headName = 'Users';
+    private $routeName = 'users';
+    private $permissionName = 'Users';
+    private $snakeName = 'users';
     public function __construct()
     {
         $this->middleware('auth');
@@ -40,7 +46,19 @@ class UserController extends Controller
             $users = User::where('id', '>', 2)->get();
         }
 
-        return view('back_end.users_management.users.index', compact('users'))->with('i');
+
+        $createdByUsers = $users->sortBy('createdBy')->pluck('createdBy')->unique();
+        $updatedByUsers = $users->sortBy('updatedBy')->pluck('updatedBy')->unique();
+        return view('back_end.users_management.users.index')->with(
+            [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
+                'users' => $users,
+                'createdByUsers' => $createdByUsers,
+                'updatedByUsers' => $updatedByUsers,
+            ]
+        );
     }
     public function usersGet()
     {
@@ -97,10 +115,6 @@ class UserController extends Controller
             ->editColumn('timeZone', function (User $user) {
 
                 return ucwords($user->timeZone->time_zone);
-            })
-            ->editColumn('blood', function (User $user) {
-
-                return ucwords($user->blood->name);
             })
             ->editColumn('roles', function (User $user) {
 
@@ -166,9 +180,8 @@ class UserController extends Controller
     public function create()
     {
         //
-        $bloods = Blood::where('status', 1)->get();
         $time_zones = TimeZone::where('status', 1)->get();
-        $country_list = DB::table('country_state_district_cities')
+        $country_list = DB::table('addresses')
             ->groupBy('country')
             ->where('status', 1)->get();
 
@@ -184,14 +197,14 @@ class UserController extends Controller
         $permissions = Permission::all()->groupBy('parent');
 
 
-        return view('back_end.users_management.users.create', compact('roles', 'permissions', 'users', 'bloods', 'time_zones', 'country_list'));
+        return view('back_end.users_management.users.create', compact('roles', 'permissions', 'users', 'time_zones', 'country_list'));
     }
     function csdcsGet(Request $request)
     {
         $select = $request->get('select');
         $value = $request->get('value');
         $dependent = $request->get('dependent');
-        $data = DB::table('country_state_district_cities')
+        $data = DB::table('addresses')
             ->where($select, $value)
             ->groupBy($dependent)
             ->get();
@@ -200,6 +213,33 @@ class UserController extends Controller
             $output .= '<option value="' . $row->$dependent . '">' . $row->$dependent . '</option>';
         }
         echo $output;
+    }
+
+    public function usersImport()
+    {
+        return view('back_end.techso.masters.job_types.import');
+    }
+
+    public function usersDownload()
+    {
+        $path = public_path('downloads/sample_excels/job_types_import_sample.xlsx');
+        return response()->download($path);
+    }
+
+    public function usersUpload(Request $request)
+    {
+        $request->validate([
+            'data' => 'required'
+        ]);
+
+        try {
+            Excel::import(new UsersImport, $request->file('data'));
+            return redirect()->route('job-types.index')
+                ->with('message_store', 'Job Type Import Successfully');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            return redirect()->back()->with('import_errors', $failures);
+        }
     }
 
     public function store(Request $request)
@@ -219,7 +259,7 @@ class UserController extends Controller
             'roles' => 'required'
         ]);
 
-        $city_id = (DB::table('country_state_district_cities')->where('city', $request->city)->first())->id;
+        $city_id = (DB::table('addresses')->where('city', $request->city)->first())->id;
 
         $user = new User();
 
@@ -259,7 +299,7 @@ class UserController extends Controller
     {
         $bloods = Blood::where('status', 1)->get();
         $time_zones = TimeZone::where('status', 1)->get();
-        $country_list = DB::table('country_state_district_cities')
+        $country_list = DB::table('addresses')
             ->groupBy('country')
             ->where('status', 1)->get();
         return view('back_end.users_management.users.profile', compact('bloods', 'time_zones', 'country_list'));
@@ -282,7 +322,7 @@ class UserController extends Controller
 
         ]);
 
-        $city_id = (DB::table('country_state_district_cities')->where('city', $request->city)->first())->id;
+        $city_id = (DB::table('addresses')->where('city', $request->city)->first())->id;
 
         if ($request->changePassword == 1) {
             $this->validate($request, [
@@ -374,9 +414,8 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $bloods = Blood::where('status', 1)->get();
         $time_zones = TimeZone::where('status', 1)->get();
-        $country_list = DB::table('country_state_district_cities')
+        $country_list = DB::table('addresses')
             ->groupBy('country')
             ->where('status', 1)->get();
 
@@ -390,8 +429,18 @@ class UserController extends Controller
         $user = User::find($id);
         $permissions = Permission::all()->groupBy('parent');
 
-
-        return view('back_end.users_management.users.edit', compact('roles', 'permissions', 'user', 'bloods', 'time_zones', 'country_list'));
+        return view('back_end.users_management.users.edit')->with(
+            [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
+                'user' => $user,
+                'roles' => $roles,
+                'permissions' => $permissions,
+                'time_zones' => $time_zones,
+                'country_list' => $country_list,
+            ]
+        );
     }
 
     public function update(Request $request, $id)
@@ -417,7 +466,7 @@ class UserController extends Controller
             ]);
         }
 
-        $city_id = (DB::table('country_state_district_cities')->where('city', $request->city)->first())->id;
+        $city_id = (DB::table('addresses')->where('city', $request->city)->first())->id;
 
         $user = User::find($id);
 

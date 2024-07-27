@@ -12,8 +12,8 @@
         @if (Auth::user()->settings['dark_mode'] == 1) dark-mode @endif
     }
     @else{
-        @if ($default_layout->data['sidebar_collapse'] == 1) sidebar-collapse @endif
-        @if ($default_layout->data['dark_mode'] == 1) dark-mode @endif}
+        @if ($settings['layout_sidebar_collapse'] == 1) sidebar-collapse @endif
+        @if ($settings['layout_dark_mode'] == 1) dark-mode @endif}
     @endif
     ">
     <div id="loading"></div>

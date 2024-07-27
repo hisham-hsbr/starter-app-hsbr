@@ -119,4 +119,9 @@ implements MustVerifyEmail
     {
         return $this->belongsTo(Address::class, 'city_id', 'id');
     }
+
+    public function userSettings()
+    {
+        return $this->hasMany(UserSettings::class);
+    }
 }

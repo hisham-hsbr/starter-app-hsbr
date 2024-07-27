@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ $page->data['page_title_prefix'] }} : @yield('PageHead') {{ $page->data['page_title_suffix'] }}</title>
+<title>{{ $settings['page_title_prefix'] }} : {{ $headName }} @yield('PageHead')
+    {{ $settings['page_title_suffix'] }}</title>
 
 <x-app.application-favicon />
 

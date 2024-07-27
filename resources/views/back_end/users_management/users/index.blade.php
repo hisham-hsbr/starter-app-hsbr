@@ -1,16 +1,16 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Users Index')
+@section('PageHead', 'Index')
 
-@section('PageTitle', 'Users')
+@section('PageTitle', 'Index')
 @section('pageNavHeader')
     <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Users</a></li>
+    <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
     <li class="breadcrumb-item active">Index</li>
 @endsection
 
 @section('headLinks')
-    <x-links.header-links-dataTable />
+    <x-back_end.plugins.dataTable-head />
 @endsection
 
 @section('actionTitle', 'Users Index')
@@ -23,20 +23,22 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             @can('User Read')
-                                <x-layouts.div-clearfix>
+                                <x-back_end.layouts.div-clearfix>
                                     @can('User Create')
-                                        <x-form.button-href button_type="" button_oneclick="" button_class="btn btn-primary"
-                                            href="{{ route('users.create') }}" button_icon="fa fa-add" button_name="Add" />
+                                        <x-back_end.form.button-href button_type="" button_oneclick=""
+                                            button_class="btn btn-primary" href="{{ route('users.create') }}"
+                                            button_icon="fa fa-add" button_name="Add" />
                                     @endcan {{-- User Create End --}}
                                     @can('User Settings')
-                                        <x-form.button-href button_type="" button_oneclick="" button_class="btn btn-default"
-                                            href="{{ route('users.create') }}" button_icon="fa fa-cog" button_name="Settings" />
+                                        <x-back_end.form.button-href button_type="" button_oneclick=""
+                                            button_class="btn btn-default" href="{{ route('users.create') }}"
+                                            button_icon="fa fa-cog" button_name="Settings" />
                                     @endcan {{-- User Settings End --}}
                                     @can('User Read')
-                                        <x-form.button button_type="" button_oneclick="Refresh()" button_class="btn btn-success"
-                                            button_icon="fa fa-refresh" button_name="Refresh" />
+                                        <x-back_end.form.button button_type="" button_oneclick="Refresh()"
+                                            button_class="btn btn-success" button_icon="fa fa-refresh" button_name="Refresh" />
                                     @endcan {{-- User Read --}}
-                                </x-layouts.div-clearfix>
+                                </x-back_end.layouts.div-clearfix>
                                 @can('User Read')
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
@@ -73,9 +75,6 @@
                                                 @endcan
                                                 @can('User Read City')
                                                     <th>City</th>
-                                                @endcan
-                                                @can('User Read Blood')
-                                                    <th>Blood</th>
                                                 @endcan
                                                 @can('User Read Time Zone')
                                                     <th>Time Zone</th>
@@ -144,9 +143,6 @@
                                                 @can('User Read City')
                                                     <th>City</th>
                                                 @endcan
-                                                @can('User Read Blood')
-                                                    <th>Blood</th>
-                                                @endcan
                                                 @can('User Read Time Zone')
                                                     <th>Time Zone</th>
                                                 @endcan
@@ -195,9 +191,10 @@
 @section('actionFooter', 'Footer')
 @section('footerLinks')
 
-    <x-message.message />
+    <x-back_end.message.message />
+    <x-back_end.message.table-update />
 
-    <x-links.footer-links-dataTable />
+    <x-back_end.plugins.dataTable-footer />
 
     <script>
         $(function() {
@@ -346,14 +343,6 @@
                         {
                             data: 'cityName',
                             name: 'cityName',
-                            defaultContent: '',
-                            searchable: false,
-                        },
-                    @endcan
-                    @can('User Read Blood')
-                        {
-                            data: 'blood',
-                            name: 'blood',
                             defaultContent: '',
                             searchable: false,
                         },

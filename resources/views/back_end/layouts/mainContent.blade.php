@@ -11,7 +11,7 @@
 
                 @if (Auth::user()->settings['card_header'] == 1)
                     <div class="card-header">
-                        <h3 class="card-title">@yield('actionTitle')</h3>
+                        <h3 class="card-title">{{ $headName }} @yield('actionTitle')</h3>
 
 
                         <div class="card-tools">

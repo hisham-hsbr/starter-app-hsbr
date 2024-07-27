@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "Activitylog",
         "csdc",
         "csdcs",
         "Datatables",
@@ -7,7 +8,9 @@
         "HSBR",
         "Maatwebsite",
         "putFileAs",
-        "Techso"
+        "Spatie",
+        "Techso",
+        "Yajra"
     ],
     "cSpell.ignoreWords": ["putFileAs"]
 }

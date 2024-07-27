@@ -1,15 +1,17 @@
 <?php
 
 use App\Models\ApplicationSettings;
-use App\Models\DeveloperSettings;
 
+
+
+// view()->share('settings', ApplicationSettings::firstWhere('name', 'application'));
 
 // Developer Settings view
 
-view()->share('application', DeveloperSettings::firstWhere('name', 'application'));
-view()->share('page', DeveloperSettings::firstWhere('name', 'page'));
-view()->share('developer', DeveloperSettings::firstWhere('name', 'developer'));
-view()->share('logo', DeveloperSettings::firstWhere('name', 'logo'));
+view()->share('application', ApplicationSettings::firstWhere('name', 'application'));
+view()->share('page', ApplicationSettings::firstWhere('name', 'page'));
+view()->share('developer', ApplicationSettings::firstWhere('name', 'developer'));
+view()->share('logo', ApplicationSettings::firstWhere('name', 'logo'));
 
 
 // App Settings view

@@ -22,9 +22,17 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(DeveloperUserSeeder::class);
         $this->call(PermissionSeeder::class);
+        $this->call(SettingsSeeder::class);
         $this->call(ApplicationSettingsSeeder::class);
         $this->call(AdminUserSeeder::class);
         $this->call(TimeZoneSeeder::class);
         $this->call(AddressSeeder::class);
+
+
+
+
+        // end
+        $this->call(TestDemoSeeder::class);
+        $this->call(UpdateDataSeeder::class);
     }
 }

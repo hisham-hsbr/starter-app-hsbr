@@ -39,6 +39,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/destroy{id}', 'destroy')->name('destroy');
         Route::get('/get', 'usersGet')->name('get');
         Route::post('/csdc/get', 'csdcsGet')->name('csdcs.get');
+        Route::get('/pdf/{id}', 'usersPDF')->name('pdf');
+        Route::get('/import', 'usersImport')->name('import');
+        Route::post('/upload', 'usersUpload')->name('upload');
+        Route::get('/download', 'usersDownload')->name('download');
     });
 
     //Profile

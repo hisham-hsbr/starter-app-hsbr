@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<title>{{ $application->data['app_name'] }} {{ $default_message->data['home_toolbar_message'] }}</title>
+<title>{{ $settings['app_name'] }} {{ $settings['message_home_toolbar'] }}</title>
 
 
 <meta content="" name="description">
