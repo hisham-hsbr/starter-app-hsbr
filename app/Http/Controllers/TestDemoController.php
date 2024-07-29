@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\TestDemo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TestDemoController extends Controller
 {
@@ -29,11 +30,14 @@ class TestDemoController extends Controller
 
     public function demo1()
     {
+        $users = User::all();
+        // $users = User::active()->get();
         return view('back_end.test.demos.demo1')->with(
             [
                 'headName' => $this->headName,
                 'routeName' => $this->routeName,
                 'permissionName' => $this->permissionName,
+                'users' => $users,
             ]
         );
     }
@@ -229,6 +233,8 @@ class TestDemoController extends Controller
     public function destroy($id)
     {
         // dd('h');
+        // encrypt($id);
+        // $testDemo  = TestDemo::findOrFail(decrypt($id));
         $testDemo  = TestDemo::findOrFail($id);
         $testDemo->delete();
 
@@ -237,5 +243,9 @@ class TestDemoController extends Controller
                 'message_update' => 'TestDemo Updated Successfully'
             ]
         );
+    }
+    public function activate($id)
+    {
+        // https://laravel.com/docs/10.x/eloquent#soft-deleting
     }
 }

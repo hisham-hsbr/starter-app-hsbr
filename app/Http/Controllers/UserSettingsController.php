@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TestDemo;
 use App\Models\UserSettings;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserSettingsController extends Controller
 {
@@ -50,62 +51,61 @@ class UserSettingsController extends Controller
         $userSettingss = UserSettings::all();
         return Datatables::of($userSettingss)
 
-        ->setRowId(function ($userSettings) {
-            return $userSettings->id;
+            ->setRowId(function ($userSettings) {
+                return $userSettings->id;
             })
 
             ->editColumn('status', function (UserSettings $userSettings) {
 
-                $active='<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
-                $inActive='<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
+                $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
+                $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
 
                 $activeId = ($userSettings->status);
 
-                    if($activeId==1){
-                        $activeId = $active;
-                    }
-                    else {
-                        $activeId = $inActive;
-                    }
-                    return $activeId;
+                if ($activeId == 1) {
+                    $activeId = $active;
+                } else {
+                    $activeId = $inActive;
+                }
+                return $activeId;
             })
 
 
-        ->editColumn('created_by', function (UserSettings $userSettings) {
+            ->editColumn('created_by', function (UserSettings $userSettings) {
 
-            return ucwords($userSettings->CreatedBy->name);
-        })
+                return ucwords($userSettings->CreatedBy->name);
+            })
 
 
-        ->editColumn('updated_by', function (UserSettings $userSettings) {
+            ->editColumn('updated_by', function (UserSettings $userSettings) {
 
-            return ucwords($userSettings->UpdatedBy->name);
-        })
-        ->addColumn('created_at', function (UserSettings $userSettings) {
-            return $userSettings->created_at->format('d-M-Y h:m');
-        })
-        ->addColumn('updated_at', function (UserSettings $userSettings) {
+                return ucwords($userSettings->UpdatedBy->name);
+            })
+            ->addColumn('created_at', function (UserSettings $userSettings) {
+                return $userSettings->created_at->format('d-M-Y h:m');
+            })
+            ->addColumn('updated_at', function (UserSettings $userSettings) {
 
-            return $userSettings->updated_at->format('d-M-Y h:m');
-        })
+                return $userSettings->updated_at->format('d-M-Y h:m');
+            })
 
-        ->addColumn('editLink', function (UserSettings $userSettings) {
+            ->addColumn('editLink', function (UserSettings $userSettings) {
 
-            $editLink ='<a href="'. route('UserSettingss.edit', $userSettings->id) .'" class="ml-2"><i class="fa-solid fa-edit"></i></a>';
-               return $editLink;
-        })
-        ->addColumn('deleteLink', function (UserSettings $userSettings) {
-           $CSRFToken = "csrf_field()";
-            $deleteLink ='
-                        <button class="btn btn-link delete-userSettings" data-userSettings_id="'.$userSettings->id.'" type="submit"><i
+                $editLink = '<a href="' . route('UserSettingss.edit', $userSettings->id) . '" class="ml-2"><i class="fa-solid fa-edit"></i></a>';
+                return $editLink;
+            })
+            ->addColumn('deleteLink', function (UserSettings $userSettings) {
+                $CSRFToken = "csrf_field()";
+                $deleteLink = '
+                        <button class="btn btn-link delete-userSettings" data-userSettings_id="' . $userSettings->id . '" type="submit"><i
                                 class="fa-solid fa-trash-can text-danger"></i>
                         </button>';
-               return $deleteLink;
-        })
+                return $deleteLink;
+            })
 
 
-       ->rawColumns(['status','editLink','deleteLink'])
-        ->toJson();
+            ->rawColumns(['status', 'editLink', 'deleteLink'])
+            ->toJson();
     }
 
     /**
@@ -134,10 +134,9 @@ class UserSettingsController extends Controller
         $userSettings->name = $request->name;
 
 
-        if ($request->status==0)
-            {
-                $userSettings->status==0;
-            }
+        if ($request->status == 0) {
+            $userSettings->status == 0;
+        }
 
         $userSettings->status = $request->status;
 
@@ -159,6 +158,7 @@ class UserSettingsController extends Controller
     public function show(UserSettings $userSettings)
     {
         $userSettings = UserSettings::find($userSettings);
+        $testDemo = TestDemo::all();
 
         return view('back_end.test.demos.show')->with(
             [
@@ -173,6 +173,7 @@ class UserSettingsController extends Controller
     public function edit(UserSettings $userSettings)
     {
         $userSettings = UserSettings::find($userSettings);
+        $testDemo = TestDemo::all();
 
         return view('back_end.test.demos.edit')->with(
             [
@@ -184,7 +185,7 @@ class UserSettingsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -197,10 +198,9 @@ class UserSettingsController extends Controller
         $userSettings->name = $request->name;
 
 
-        if ($request->status==0)
-            {
-                $userSettings->status==0;
-            }
+        if ($request->status == 0) {
+            $userSettings->status == 0;
+        }
 
         $userSettings->status = $request->status;
 
@@ -218,7 +218,7 @@ class UserSettingsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-   public function destroy($id)
+    public function destroy($id)
     {
         $userSettings  = UserSettings::findOrFail($id);
         $userSettings->delete();

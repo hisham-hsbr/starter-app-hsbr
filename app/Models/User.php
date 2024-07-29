@@ -87,6 +87,10 @@ implements MustVerifyEmail
         'settings' => '{"personal_settings":"1","card_header":1,"card_footer":1, "sidebar_collapse":null,"dark_mode":null,"default_status":1,"default_time_zone":1,"permission_view":"list","purchase_edit_days":1,"sale_edit_days":1}'
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 
     public function getCreatedAtAttribute()
     {
@@ -99,6 +103,13 @@ implements MustVerifyEmail
         $time_zone = Auth::user()->timeZone->time_zone;
         return Carbon::parse($this->attributes['updated_at'])->setTimezone($time_zone);
     }
+
+    public function getStatusTextAttribute()
+    {
+        if ($this->status == 1) return "Active";
+        else return "In Active";
+    }
+
 
     public function createdBy()
     {
@@ -124,4 +135,5 @@ implements MustVerifyEmail
     {
         return $this->hasMany(UserSettings::class);
     }
+    protected $appends = ['status_text'];
 }

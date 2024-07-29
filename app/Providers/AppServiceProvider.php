@@ -24,8 +24,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        $run_seeder_disable = env('RUN_SEEDER_DISABLE');
 
-        $settings = Settings::all()->pluck('default_value', 'key');
-        View::share('settings', $settings);
+        if ($run_seeder_disable == 'Y') {
+            $settings = Settings::all()->pluck('default_value', 'key');
+            View::share('settings', $settings);
+        }
     }
 }
