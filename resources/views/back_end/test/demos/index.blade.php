@@ -1,23 +1,36 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Index')
+@section('PageHead')
+    @lang('my.index')
+@endsection
 
-@section('PageTitle', 'Index')
+@section('PageTitle')
+    @lang('my.index')
+@endsection
 
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">@lang('my.dashboard')</a></li>
     <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
-    <li class="breadcrumb-item active">Index</li>
+    <li class="breadcrumb-item active">@lang('my.index')</li>
 @endsection
 
 @section('headLinks')
     <x-back-end.plugins.dataTable-head />
 @endsection
 
-@section('actionTitle', 'Index')
+@section('actionTitle')
+    @lang('my.index')
+@endsection
 
 @section('mainContent')
     <section class="content">
+
+
+        <p>@lang('my.app_name')</p><br>
+        <p>@lang('my.dashboard')</p><br>
+        <p>Current Language: {{ App::getLocale() }}</p>
+
+
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">

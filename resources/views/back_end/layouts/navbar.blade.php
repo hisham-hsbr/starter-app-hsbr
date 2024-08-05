@@ -196,5 +196,6 @@
             </a>
         </li> --}}
     </ul>
+    <x-back-end.layouts.lang-dropdown />
 
 </nav>

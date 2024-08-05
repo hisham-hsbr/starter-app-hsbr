@@ -16,7 +16,7 @@
 <!-- dynamic Dependent Dropdown List js -->
 {{-- <script src="{{ asset('js/dynamicDependent.js') }}" type="text/javascript"></script> --}}
 
-
+<x-back-end.script.lang-change />
 
 @section('footerLinks')
 @show

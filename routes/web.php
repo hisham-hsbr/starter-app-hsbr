@@ -2,6 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('lang/{lang}', function ($lang) {
+    app()->setLocale($lang);
+    session()->put('locale', $lang);
+    return redirect()->back();
+})->name('lang');
+
+
 
 //test demo
 Route::controller('TestDemoController')->prefix('/test/demos')->name('test-demos.')->group(function () {
