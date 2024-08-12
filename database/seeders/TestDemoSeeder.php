@@ -38,5 +38,7 @@ class TestDemoSeeder extends Seeder
             TestDemo::create(['name' => 'Test 14', 'local_name' => 'Local name 14',  'status' => '1', 'created_by' => '1', 'updated_by' => '1']); //
             TestDemo::create(['name' => 'Test 15', 'local_name' => 'Local name 15',  'status' => '1', 'created_by' => '1', 'updated_by' => '1']); //
         }
+
+        TestDemo::factory(100)->create();
     }
 }

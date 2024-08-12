@@ -145,10 +145,10 @@ class TestDemoController extends Controller
                         <a href="' . route('test-demos.show', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
                         <a href="' . route('test-demos.pdf', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
                         <a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
-                        <button class="btn btn-link delete-test_demo" data-test_demo_id="' . $testDemo->id . '" type="submit"><i
+                        <button class="btn btn-link delete-item_delete" data-item_delete_id="' . $testDemo->id . '" data-value="' . $testDemo->name . '" type="submit"><i
                                 class="fa-solid fa-eraser text-danger"></i>
                         </button>
-                        <button class="btn btn-link force-delete-test_demo" data-test_demo_force_id="' . $testDemo->id . '" type="submit"><i
+                        <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . $testDemo->id . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit"><i
                                 class="fa-solid fa-trash-can text-danger"></i>
                         </button>
                         </div>

@@ -104,6 +104,9 @@
                                             @can('{{ $permissionName }} Read')
                                                 <th>Sn</th>
                                             @endcan
+                                            @can('{{ $permissionName }} Read Action')
+                                                <th width="20%">Action</th>
+                                            @endcan
                                             @can('{{ $permissionName }} Read Name')
                                                 <th width="20%">Name</th>
                                             @endcan
@@ -124,12 +127,6 @@
                                             @endcan
                                             @can('{{ $permissionName }} Read Updated By')
                                                 <th width="20%">Updated By</th>
-                                            @endcan
-                                            @can('{{ $permissionName }} Edit')
-                                                <th>Edit</th>
-                                            @endcan
-                                            @can('{{ $permissionName }} Delete')
-                                                <th>Delete</th>
                                             @endcan
                                         </tr>
                                     </thead>
@@ -141,6 +138,9 @@
                                             @can('{{ $permissionName }} Read')
                                                 <th>Sn</th>
                                             @endcan
+                                            @can('{{ $permissionName }} Read Action')
+                                                <th width="20%">Action</th>
+                                            @endcan
                                             @can('{{ $permissionName }} Read Name')
                                                 <th width="20%">Name</th>
                                             @endcan
@@ -161,12 +161,6 @@
                                             @endcan
                                             @can('{{ $permissionName }} Read Updated By')
                                                 <th width="20%">Updated By</th>
-                                            @endcan
-                                            @can('{{ $permissionName }} Edit')
-                                                <th>Edit</th>
-                                            @endcan
-                                            @can('{{ $permissionName }} Delete')
-                                                <th>Delete</th>
                                             @endcan
                                         </tr>
                                     </tfoot>
@@ -179,11 +173,18 @@
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </section>
+
+
+
+
+
 @endsection <!-- /.mainContent end -->
 @section('actionFooter', 'Footer')
 @section('footerLinks')
 
 
+    <x-back-end.script.delete-confirmation />
+    <x-back-end.script.force-delete-confirmation />
     <x-back-end.message.message />
     <x-back-end.script.table-update />
     <x-back-end.plugins.dataTable-footer />
@@ -199,26 +200,33 @@
                 "processing": true,
                 dom: '<"html5buttons"B>lTftigp',
                 "fnDrawCallback": function(oSettings) {
-                    // changing part
-                    var headName = 'Test Demo';
-                    var snakeName = 'test_demo';
 
-                    $('.delete-' + snakeName).on('click', function() {
-                        var itemID = $(this).data(snakeName + '_id');
-                        var isReady = confirm("Are you sure delete " + headName);
-                        var myHeaders = new Headers({
-                            "X-CSRF-TOKEN": $("input[name='_token']").val()
-                        });
+                    $('.delete-item_delete').on('click', function() {
+                        var itemID = $(this).data('item_delete_id');
+                        var itemName = this.getAttribute('data-value');
 
-                        if (isReady) {
-                            // changing part
-                            fetch("{{ route('test-demos.destroy', '') }}/" +
-                                itemID, {
-                                    method: 'DELETE',
-                                    headers: myHeaders,
-                                }).then(function(response) {
+                        // Set the item name in the modal
+                        $('#modal-item-name').text(itemName);
+
+                        // Show the modal
+                        $('#deleteConfirmModal').modal('show');
+
+                        // Handle the delete action when the user confirms
+                        $('#confirmDeleteBtn').off('click').on('click', function() {
+                            var myHeaders = new Headers({
+                                "X-CSRF-TOKEN": $("input[name='_token']").val()
+                            });
+
+                            fetch("{{ route('test-demos.destroy', '') }}/" + itemID, {
+                                method: 'DELETE',
+                                headers: myHeaders,
+                            }).then(function(response) {
                                 return response.json();
                             });
+
+                            // Hide the modal after confirming
+                            $('#deleteConfirmModal').modal('hide');
+                            // Reload the DataTable and show a success message
                             $('#example1').DataTable().ajax.reload();
                             toastr.options = {
                                 "closeButton": false,
@@ -237,26 +245,47 @@
                                 "showMethod": "fadeIn",
                                 "hideMethod": "fadeOut"
                             };
-                            toastr.error(headName + " Deleting.....");
-                        }
-
-                    });
-                    $('.force-delete-' + snakeName).on('click', function() {
-                        var itemID = $(this).data(snakeName + '_force_id');
-                        var isReady = confirm("Are you sure force delete " + headName);
-                        var myHeaders = new Headers({
-                            "X-CSRF-TOKEN": $("input[name='_token']").val()
+                            toastr.error(itemName + " Deleting.....");
                         });
+                        toastr.clear();
+                    });
 
-                        if (isReady) {
-                            // changing part
+                    // force delete
+                    $('.delete-item_delete_force').on('click', function() {
+                        var itemID = $(this).data('item_delete_force_id');
+                        var itemName = this.getAttribute('data-value');
+                        $('#deleteConfirmInput').val('');
+                        $('#confirmDeleteButton').prop('disabled', true);
+                        $('#itemNameInModal').text(itemName); // Set the item name in the modal
+
+                        var modal = new bootstrap.Modal(document.getElementById(
+                            'forceDeleteConfirmModal'), {});
+                        modal.show();
+
+                        // Enable confirm button only when "delete" is typed
+                        $('#deleteConfirmInput').on('input', function() {
+                            if ($(this).val().toLowerCase() === 'delete') {
+                                $('#confirmDeleteButton').prop('disabled', false);
+                            } else {
+                                $('#confirmDeleteButton').prop('disabled', true);
+                            }
+                        });
+                        $('#confirmDeleteButton').on('click', function() {
+                            var myHeaders = new Headers({
+                                "X-CSRF-TOKEN": $("input[name='_token']").val()
+                            });
+
+
                             fetch("{{ route('test-demos.force.destroy', '') }}/" +
                                 itemID, {
                                     method: 'DELETE',
                                     headers: myHeaders,
                                 }).then(function(response) {
                                 return response.json();
+
                             });
+
+                            modal.hide(); // Hide the modal after deletion
                             $('#example1').DataTable().ajax.reload();
                             toastr.options = {
                                 "closeButton": false,
@@ -275,10 +304,13 @@
                                 "showMethod": "fadeIn",
                                 "hideMethod": "fadeOut"
                             };
-                            toastr.error(headName + " Deleting.....");
-                        }
-
+                            toastr.error(itemName + " Force Deleting.....");
+                        });
                     });
+                    toastr.clear();
+
+
+
                 },
 
                 // "buttons": ["excel", "pdf", "print", "colvis"],
@@ -330,10 +362,18 @@
                             defaultContent: ''
                         },
                     @endcan
-                    @can('Job Type Read Name')
+                    @can('Job Type Read Action')
                         {
                             data: 'action2',
                             name: 'action2',
+                            width: '100%',
+                            defaultContent: ''
+                        },
+                    @endcan
+                    @can('Job Type Read Name')
+                        {
+                            data: 'name',
+                            name: 'name',
                             width: '100%',
                             defaultContent: ''
                         },
@@ -383,20 +423,6 @@
                             data: 'updated_by',
                             name: 'updated_by',
                             width: '100%',
-                            defaultContent: ''
-                        },
-                    @endcan
-                    @can('Job Type Edit')
-                        {
-                            data: 'editLink',
-                            name: 'editLink',
-                            defaultContent: ''
-                        },
-                    @endcan
-                    @can('Job Type Delete')
-                        {
-                            data: 'deleteLink',
-                            name: 'deleteLink',
                             defaultContent: ''
                         },
                     @endcan
