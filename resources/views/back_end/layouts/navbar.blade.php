@@ -11,6 +11,8 @@
             <a href="#" class="nav-link">Contact</a>
         </li>
     </ul>
+    <h5 style="color: red; margin-right: 2px">{{ App::getLocale() }}</h5>----
+    <h5 style="color: green; margin-left: 2px"> @lang('my.dashboard')</h5>
 
     <!-- Right navbar links -->
     <ul class="ml-auto navbar-nav">

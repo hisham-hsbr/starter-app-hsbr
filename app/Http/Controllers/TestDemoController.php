@@ -16,6 +16,7 @@ class TestDemoController extends Controller
     private $routeName = 'test-demos';
     private $permissionName = 'Test Demo';
     private $snakeName = 'test_demo';
+    private $camelCase = 'testDemo';
 
     public function __construct()
     {
@@ -63,6 +64,9 @@ class TestDemoController extends Controller
     {
 
         $testDemos = TestDemo::all();
+        // $testDemos = TestDemo::withTrashed()->get();
+
+
         return Datatables::of($testDemos)
 
             ->setRowId(function ($testDemo) {
@@ -117,8 +121,51 @@ class TestDemoController extends Controller
                 return $deleteLink;
             })
 
+            ->addColumn('action', function (TestDemo $testDemo) {
+                $CSRFToken = "csrf_field()";
+                $action =
+                    '
+                        <a href="' . route('test-demos.show', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
+                        <a href="' . route('test-demos.pdf', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
+                        <a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
+                        <button class="btn btn-link delete-test_demo" data-test_demo_id="' . $testDemo->id . '" type="submit"><i
+                                class="fa-solid fa-trash-can text-danger"></i>
+                        </button>
+                        ';
+                return $action;
+            })
+            ->addColumn('action2', function (TestDemo $testDemo) {
+                $CSRFToken = "csrf_field()";
+                $action2 =
+                    '
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-info">Action</button>
+                        <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" ></button>
+                        <div class="dropdown-menu" role="menu">
+                        <a href="' . route('test-demos.show', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
+                        <a href="' . route('test-demos.pdf', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
+                        <a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
+                        <button class="btn btn-link delete-test_demo" data-test_demo_id="' . $testDemo->id . '" type="submit"><i
+                                class="fa-solid fa-eraser text-danger"></i>
+                        </button>
+                        <button class="btn btn-link force-delete-test_demo" data-test_demo_force_id="' . $testDemo->id . '" type="submit"><i
+                                class="fa-solid fa-trash-can text-danger"></i>
+                        </button>
+                        </div>
+                    </div>
+                    ';
 
-            ->rawColumns(['status', 'editLink', 'deleteLink'])
+
+
+
+
+
+
+                return $action2;
+            })
+
+
+            ->rawColumns(['status', 'editLink', 'deleteLink', 'action2'])
             ->toJson();
     }
 
@@ -169,13 +216,17 @@ class TestDemoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TestDemo $testDemo)
+    public function show($testDemo)
     {
         $testDemo = TestDemo::find($testDemo);
 
         return view('back_end.test.demos.show')->with(
             [
-                'testDemo' => $testDemo
+                'testDemo' => $testDemo,
+                'camelCase' => $this->camelCase,
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
             ]
         );
     }
@@ -183,7 +234,7 @@ class TestDemoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TestDemo $testDemo)
+    public function edit($testDemo)
     {
         $testDemo = TestDemo::find($testDemo);
 
@@ -240,12 +291,29 @@ class TestDemoController extends Controller
 
         return redirect()->route('testDemos.index')->with(
             [
-                'message_update' => 'TestDemo Updated Successfully'
+                'message_update' => 'TestDemo Delete Successfully'
             ]
         );
     }
-    public function activate($id)
+    public function forceDestroy($id)
     {
-        // https://laravel.com/docs/10.x/eloquent#soft-deleting
+        $testDemo  = TestDemo::findOrFail($id);
+        $testDemo->forceDelete();
+
+        return redirect()->route('testDemos.index')->with(
+            [
+                'message_update' => 'TestDemo Force Delete Successfully'
+            ]
+        );
+    }
+    public function restore($id)
+    {
+        $testDemo  = TestDemo::withTrashed()->findOrFail($id);
+        $testDemo->restore();
+        return redirect()->route('testDemos.index')->with(
+            [
+                'message_update' => 'TestDemo Restored Successfully'
+            ]
+        );
     }
 }

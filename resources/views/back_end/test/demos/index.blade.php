@@ -1,17 +1,17 @@
 @extends('back_end.layouts.app')
 
 @section('PageHead')
-    @lang('my.index')
+    {{ ucwords(__('my.index')) }}
 @endsection
 
 @section('PageTitle')
-    @lang('my.index')
+    {{ ucwords(__('my.index')) }}
 @endsection
 
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">@lang('my.dashboard')</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
-    <li class="breadcrumb-item active">@lang('my.index')</li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.index')) }}</li>
 @endsection
 
 @section('headLinks')
@@ -19,17 +19,11 @@
 @endsection
 
 @section('actionTitle')
-    @lang('my.index')
+    {{ ucwords(__('my.index')) }}
 @endsection
 
 @section('mainContent')
     <section class="content">
-
-
-        <p>@lang('my.app_name')</p><br>
-        <p>@lang('my.dashboard')</p><br>
-        <p>Current Language: {{ App::getLocale() }}</p>
-
 
         <div class="container-fluid">
             <div class="row">
@@ -247,6 +241,44 @@
                         }
 
                     });
+                    $('.force-delete-' + snakeName).on('click', function() {
+                        var itemID = $(this).data(snakeName + '_force_id');
+                        var isReady = confirm("Are you sure force delete " + headName);
+                        var myHeaders = new Headers({
+                            "X-CSRF-TOKEN": $("input[name='_token']").val()
+                        });
+
+                        if (isReady) {
+                            // changing part
+                            fetch("{{ route('test-demos.force.destroy', '') }}/" +
+                                itemID, {
+                                    method: 'DELETE',
+                                    headers: myHeaders,
+                                }).then(function(response) {
+                                return response.json();
+                            });
+                            $('#example1').DataTable().ajax.reload();
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": true,
+                                "positionClass": "toast-top-center",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "3000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            };
+                            toastr.error(headName + " Deleting.....");
+                        }
+
+                    });
                 },
 
                 // "buttons": ["excel", "pdf", "print", "colvis"],
@@ -300,8 +332,8 @@
                     @endcan
                     @can('Job Type Read Name')
                         {
-                            data: 'name',
-                            name: 'name',
+                            data: 'action2',
+                            name: 'action2',
                             width: '100%',
                             defaultContent: ''
                         },
