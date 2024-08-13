@@ -19,7 +19,7 @@ Route::controller('TestDemoController')->prefix('/test/demos')->name('test-demos
     Route::patch('/update/{id}', 'update')->name('update');
     Route::get('/get', 'testDemosGet')->name('get');
     Route::get('/show/{id}', 'show')->name('show');
-    Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+    Route::delete('/destroys/{id}', 'destroy')->name('destroy');
     Route::delete('/force-destroy/{id}', 'forceDestroy')->name('force.destroy');
     Route::get('/restore/{id}', 'restore')->name('restore');
     Route::get('/pdf/{id}', 'testDemosPDF')->name('pdf');

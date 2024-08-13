@@ -21,6 +21,7 @@
 @section('actionTitle')
     {{ ucwords(__('my.show')) }}
 @endsection
+<x-test-component />
 
 @section('mainContent')
     <div class="container-fluid">
@@ -35,135 +36,31 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <div class="card-body">
-                            <div style="border-style: groove;" class="form-group row p-3">
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Name</label>
-                                    <label><code>: {{ $testDemo->name }}</code></label>
-                                </div>
-                                {{-- <div class="col-sm-6">
-                                    <label class="col-sm-4">Job Number</label>
-                                    <label><code>:
-                                            TJ-{{ ${{ $camelCase }}.'s'.->job_number }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Job Type</label>
-                                    <label><code>:
-                                            {{ $service->jobType->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Customer Name</label>
-                                    <label><code>:
-                                            {{ $service->customer->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Customer Number</label>
-                                    <label><code>:
-                                            {{ $service->customer->phone_1 }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Customer Address</label>
-                                    <label><code>:
-                                            {{ $service->customer->address }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Lock</label>
-                                    <label><code>:
-                                            {{ $service->lock }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Serial Number</label>
-                                    <label><code>:
-                                            {{ $service->serial_number }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Product Name</label>
-                                    <label><code>:
-                                            {{ $service->product->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Complaint</label>
-                                    <label><code>:
-                                            {{ $service->complaint->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Complaint Details</label>
-                                    <label><code>:
-                                            {{ $service->complaint_details }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Work Details</label>
-                                    <label><code>:
-                                            {{ $service->work_details }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Work Status</label>
-                                    <label><code>:
-                                            {{ $service->workStatus->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Job Status</label>
-                                    <label><code>:
-                                            {{ $service->jobStatus->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Payment</label>
-                                    <label><code>:
-                                            {{ $service->payment }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Advance</label>
-                                    <label><code>:
-                                            {{ $service->advance }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Balance</label>
-                                    <label><code>:
-                                            {{ $service->balance }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Delivered At</label>
-                                    <label><code>:
-                                            {{ $service->delivered_at }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Created At</label>
-                                    <label><code>:
-                                            {{ $service->created_at }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <label class="col-sm-4">Updated At</label>
-                                    <label><code>:
-                                            {{ $service->updated_at }}</code></label>
-                                </div> --}}
-
-                                {{-- @foreach ($activityLog->properties as $key => $value)
-                                    <div class="col-md-6 pt-2">
-                                        <table class="table table-bordered">
-
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="2" class="bg-secondary color-palette">
-                                                        @if ($key == 'attributes')
-                                                            New {{ $activityLog->event }} {{ $activityLog->log_name }}
-                                                        @elseif ($key == 'old')
-                                                            Old {{ $activityLog->log_name }}
-                                                        @endif
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($value as $lists => $data)
-                                                    <tr class="bg-light color-palette">
-                                                        <td style="color:red ;width: 10%">{{ $lists }}</td>
-                                                        <td>{{ $data }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                            <div style="border-style: groove;" class="p-3 form-group row">
+                                @can('{{ $permissionName }} Read Name')
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-4">Name</label>
+                                        <label><code>: {{ $testDemo->name }}</code></label>
                                     </div>
-                                @endforeach --}}
-
-
+                                @endcan
+                                @can('{{ $permissionName }} Read Local Name')
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-4">Local Name</label>
+                                        <label><code>: {{ $testDemo->name }}</code></label>
+                                    </div>
+                                @endcan
+                                @can('{{ $permissionName }} Read Created At')
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-4">Created At</label>
+                                        <label><code>: {{ $testDemo->created_at }}</code></label>
+                                    </div>
+                                @endcan
+                                @can('{{ $permissionName }} Read Updated At')
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-4">Updated At</label>
+                                        <label><code>: {{ $testDemo->updated_at }}</code></label>
+                                    </div>
+                                @endcan
                             </div>
                         </div>
                     </div>
@@ -173,12 +70,12 @@
                     <div class="">
                         @can('Mobile Service Pdf')
                             <a type="button" href="{{ route($routeName . '.pdf', $testDemo->id) }}"
-                                class="btn btn-info float-right ml-1"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                                class="float-right ml-1 btn btn-info"><i class="fa-solid fa-file-pdf"></i> PDF</a>
                         @endcan
                         <a type="button" href="{{ route($routeName . '.edit', $testDemo->id) }}"
-                            class="btn btn-primary float-right ml-1">Edit</a>
+                            class="float-right ml-1 btn btn-primary">Edit</a>
                         <a type="button" href="{{ route($routeName . '.index') }}"
-                            class="btn btn-warning float-right ml-1">Back</a>
+                            class="float-right ml-1 btn btn-warning">Back</a>
                     </div>
                     <!-- /.card-footer -->
 

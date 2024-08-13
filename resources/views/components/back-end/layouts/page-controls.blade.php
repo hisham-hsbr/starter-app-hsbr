@@ -19,4 +19,3 @@
             button_icon="fa fa-refresh" button_name="{{ ucwords(__('my.refresh')) }}" />
     @endcan
 </x-back-end.layouts.div-clearfix>
-{{-- {{ ucwords(__('messages.welcome')) }} --}}

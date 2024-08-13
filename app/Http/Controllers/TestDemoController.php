@@ -33,7 +33,7 @@ class TestDemoController extends Controller
     {
         $users = User::all();
         // $users = User::active()->get();
-        return view('back_end.test.demos.demo1')->with(
+        return view('back_end.test.demo1')->with(
             [
                 'headName' => $this->headName,
                 'routeName' => $this->routeName,
@@ -125,7 +125,7 @@ class TestDemoController extends Controller
                 $CSRFToken = "csrf_field()";
                 $action =
                     '
-                        <a href="' . route('test-demos.show', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
+                        <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
                         <a href="' . route('test-demos.pdf', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
                         <a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
                         <button class="btn btn-link delete-test_demo" data-test_demo_id="' . $testDemo->id . '" type="submit"><i
@@ -142,13 +142,13 @@ class TestDemoController extends Controller
                         <button type="button" class="btn btn-info">Action</button>
                         <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" ></button>
                         <div class="dropdown-menu" role="menu">
-                        <a href="' . route('test-demos.show', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
-                        <a href="' . route('test-demos.pdf', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
-                        <a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
-                        <button class="btn btn-link delete-item_delete" data-item_delete_id="' . $testDemo->id . '" data-value="' . $testDemo->name . '" type="submit"><i
+                        <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
+                        <a href="' . route('test-demos.pdf', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
+                        <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
+                        <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" type="submit"><i
                                 class="fa-solid fa-eraser text-danger"></i>
                         </button>
-                        <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . $testDemo->id . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit"><i
+                        <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit"><i
                                 class="fa-solid fa-trash-can text-danger"></i>
                         </button>
                         </div>
@@ -218,7 +218,7 @@ class TestDemoController extends Controller
      */
     public function show($testDemo)
     {
-        $testDemo = TestDemo::find($testDemo);
+        $testDemo = TestDemo::find(decrypt($testDemo));
 
         return view('back_end.test.demos.show')->with(
             [
@@ -283,7 +283,7 @@ class TestDemoController extends Controller
      */
     public function destroy($id)
     {
-        // dd('h');
+        // dd($id);
         // encrypt($id);
         // $testDemo  = TestDemo::findOrFail(decrypt($id));
         $testDemo  = TestDemo::findOrFail($id);

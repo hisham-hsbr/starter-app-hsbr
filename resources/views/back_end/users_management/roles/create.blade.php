@@ -1,21 +1,28 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Role Create')
+@section('PageHead')
+    {{ ucwords(__('my.create')) }}
+@endsection
 
-@section('PageTitle', 'Role Create')
+@section('PageTitle')
+    {{ ucwords(__('my.create')) }}
+@endsection
+
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="/admin/roles">Roles</a></li>
-    <li class="breadcrumb-item active">Create</li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route($routeName . '.create') }}">{{ $headName }}</a></li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.create')) }}</li>
 @endsection
 
 @section('headLinks')
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet"
-        href="{{ asset('back_end_links/adminLinks/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
+    <x-back-end.plugins.dual-list-box-head />
 @endsection
 
-@section('actionTitle', 'Role Create')
+@section('actionTitle')
+    {{ ucwords(__('my.create')) }}
+@endsection
+<x-test-component />
+
 @section('mainContent')
     <div class="container-fluid">
         @can('Role Create')
@@ -54,7 +61,7 @@
                                                 </select>
                                             @endif
                                             @if (Auth::user()->settings['permission_view'] == 'group')
-                                                <label><input class="form-check-input p-5" id="checkall" type="checkbox">
+                                                <label><input class="p-5 form-check-input" id="checkall" type="checkbox">
                                                     Select All
                                                 </label>
                                                 <div class="container">
@@ -67,7 +74,7 @@
                                                                     </div>
                                                                     <!-- /.card-header -->
                                                                     <div class="card-body">
-                                                                        <div class="form-group clearfix">
+                                                                        <div class="clearfix form-group">
                                                                             <div class="icheck-primary d-inline">
                                                                                 @foreach ($value as $permission)
                                                                                     <input type="checkbox" name="permission[]"
@@ -103,7 +110,7 @@
                                                 </select>
                                             @endif
                                             @if ($default_layout->data['permission_view'] == 'group')
-                                                <label><input class="form-check-input p-5" id="checkall" type="checkbox">
+                                                <label><input class="p-5 form-check-input" id="checkall" type="checkbox">
                                                     Select All
                                                 </label>
                                                 <div class="container">
@@ -116,7 +123,7 @@
                                                                     </div>
                                                                     <!-- /.card-header -->
                                                                     <div class="card-body">
-                                                                        <div class="form-group clearfix">
+                                                                        <div class="clearfix form-group">
                                                                             <div class="icheck-primary d-inline">
                                                                                 @foreach ($value as $permission)
                                                                                     <input type="checkbox" name="permission[]"
@@ -146,7 +153,7 @@
                             </div>
                             <!-- /.row -->
 
-                            <div class="col-sm-10 pl-5 pt-2">
+                            <div class="pt-2 pl-5 col-sm-10">
                                 <input type="checkbox" class="form-check-input" name="status" value="1" id="status" />
                                 <label class="form-check-label" for="status">Active</label>
                             </div>
@@ -154,10 +161,10 @@
                         <!-- /.card-body -->
                         <div class="">
                             @can('Role Create')
-                                <button type="submit" class="btn btn-primary float-right ml-1">Save</button>
+                                <button type="submit" class="float-right ml-1 btn btn-primary">Save</button>
                             @endcan
                             <a type="button" href="{{ route('roles.index') }}"
-                                class="btn btn-warning float-right ml-1">Back</a>
+                                class="float-right ml-1 btn btn-warning">Back</a>
                         </div>
                         <!-- /.card-footer -->
                     </form>

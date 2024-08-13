@@ -1,19 +1,28 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Roles')
+@section('PageHead')
+    {{ ucwords(__('my.index')) }}
+@endsection
 
-@section('PageTitle', 'Roles')
+@section('PageTitle')
+    {{ ucwords(__('my.index')) }}
+@endsection
+
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-    <li class="breadcrumb-item"><a href="/admin/users-management/roles">Roles</a></li>
-    <li class="breadcrumb-item active">Index</li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.index')) }}</li>
 @endsection
 
 @section('headLinks')
-    <x-links.header-links-dataTable />
+    <x-back-end.plugins.dataTable-head />
 @endsection
 
-@section('actionTitle', 'Roles Index')
+@section('actionTitle')
+    {{ ucwords(__('my.index')) }}
+@endsection
+<x-test-component />
+
 @section('mainContent')
     <section class="content">
         <div class="container-fluid">
@@ -23,10 +32,11 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             @can('User Menu')
-                                <x-layouts.div-clearfix>
-                                    <x-form.button-href button_type="" button_oneclick="" button_class="btn btn-primary"
-                                        href="{{ route('roles.create') }}" button_icon="fa fa-add" button_name="Add" />
-                                </x-layouts.div-clearfix>
+                                <x-back-end.layouts.div-clearfix>
+                                    <x-back-end.form.button-href button_type="" button_oneclick=""
+                                        button_class="btn btn-primary" href="{{ route('roles.create') }}"
+                                        button_icon="fa fa-add" button_name="Add" />
+                                </x-back-end.layouts.div-clearfix>
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -44,9 +54,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($roles as $key => $role)
+                                        @foreach ($roles as $role)
                                             <tr>
-                                                <td>{{ ++$i }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $role->name }}</td>
                                                 <td><span class="badge badge-primary badge-pill">{{ $role->users->count() }}
                                                         Users</span></td>
@@ -118,9 +128,11 @@
 @section('actionFooter', 'Footer')
 @section('footerLinks')
 
-    <x-message.message />
-
-    <x-links.footer-links-dataTable /> />
+    <x-back-end.script.delete-confirmation />
+    <x-back-end.script.force-delete-confirmation />
+    <x-back-end.message.message />
+    <x-back-end.script.table-update />
+    <x-back-end.plugins.dataTable-footer />
 
 
     <script>
