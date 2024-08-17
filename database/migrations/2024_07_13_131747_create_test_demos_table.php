@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('test_demos', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('code')->unique();
+            $table->string('name');
             $table->string('local_name')->nullable();
             $table->string('description')->nullable();
             $table->string('edit_description')->nullable();
+            $table->boolean('default')->nullable();
             $table->boolean('status')->nullable();
 
             // default

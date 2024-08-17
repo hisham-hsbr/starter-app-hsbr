@@ -2,6 +2,8 @@
 
 namespace Spatie\Activitylog\Models;
 
+use App\Casts\TimeZoneCast;
+use App\Casts\UserNameCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -48,6 +50,10 @@ class Activity extends Model implements ActivityContract
 
     protected $casts = [
         'properties' => 'collection',
+        'created_at' => TimeZoneCast::class,
+        'updated_at' => TimeZoneCast::class,
+        'created_by' => UserNameCast::class,
+        'updated_by' => UserNameCast::class,
     ];
 
     public function __construct(array $attributes = [])
@@ -138,17 +144,6 @@ class Activity extends Model implements ActivityContract
     public function activityUser()
     {
         return $this->belongsTo(User::class, 'causer_id');
-    }
-    public function getCreatedAtAttribute()
-    {
-        $time_zone = Auth::user()->timeZone->time_zone;
-        return Carbon::parse($this->attributes['created_at'])->setTimezone($time_zone);
-    }
-
-    public function getUpdatedAtAttribute()
-    {
-        $time_zone = Auth::user()->timeZone->time_zone;
-        return Carbon::parse($this->attributes['updated_at'])->setTimezone($time_zone);
     }
 
     public function createdBy()

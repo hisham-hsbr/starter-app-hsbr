@@ -9,6 +9,11 @@ use Spatie\Activitylog\Models\Activity;
 
 class ActivitylogController extends Controller
 {
+    private $headName = 'Activity Logs';
+    private $routeName = 'activity-logs';
+    private $permissionName = 'Activity Log';
+    private $snakeName = 'activity_log';
+    private $camelCase = 'activityLog';
     public function __construct()
     {
         $this->middleware('auth');
@@ -23,13 +28,29 @@ class ActivitylogController extends Controller
     public function index()
     {
         $activityLogs = Activity::all();
-        return view('back_end.users_management.activity-log.index',compact('activityLogs'))->with('i');
+        return view('back_end.users_management.activity-log.index')->with(
+            [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
+                'activityLogs' => $activityLogs,
+            ]
+        );
     }
     public function show($id)
     {
         $activityLog = Activity::find($id);
+        // dd($activityLog);
         $users = User::all();
-        return view('back_end.users_management.activity-log.show',compact('activityLog','users'));
+        return view('back_end.users_management.activity-log.show')->with(
+            [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
+                'activityLog' => $activityLog,
+                'users' => $users,
+            ]
+        );
     }
     public function activityLogsGet()
     {
@@ -37,30 +58,22 @@ class ActivitylogController extends Controller
         $activity = Activity::all();
         return Datatables::of($activity)
 
-        ->setRowId(function ($activity) {
-            return $activity->id;
+            ->setRowId(function ($activity) {
+                return $activity->id;
             })
 
 
-            ->addColumn('created_at', function (Activity $activity) {
-                return $activity->created_at->format('d-M-Y h:m');
-            })
-
-            ->addColumn('updated_at', function (Activity $activity) {
-
-                return $activity->updated_at->format('d-M-Y h:m');
-            })
             ->editColumn('created_user', function (Activity $activity) {
 
                 return ucwords($activity->activityUser->name);
             })
             ->addColumn('viewLink', function (Activity $activity) {
 
-                $viewLink ='<a href="'. route('activityLogs.show', $activity->id) .'" class="ml-2"><i class="fa-solid fa fa-eye"></i></a>';
-                   return $viewLink;
+                $viewLink = '<a href="' . route('activity-logs.show', $activity->id) . '" class="ml-2"><i class="fa-solid fa fa-eye"></i></a>';
+                return $viewLink;
             })
 
-           ->rawColumns(['status','viewLink','created_user'])
+            ->rawColumns(['status', 'viewLink', 'created_user'])
             ->toJson();
     }
 }

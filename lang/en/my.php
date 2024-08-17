@@ -4,6 +4,7 @@ return [
     'app_name' => 'my app name English',
     'dashboard' => 'dashboard',
     'index' => 'index',
+    'show' => 'show',
     'create' => 'create',
     'add' => 'add',
     'edit' => 'edit',

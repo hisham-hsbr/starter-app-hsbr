@@ -72,8 +72,8 @@
                                                         <select data-column="6" class="form-control select2 filter-select">
                                                             <option value="">Select Created By</option>
                                                             @foreach ($createdByUsers as $createdByUser)
-                                                                <option value="{{ $createdByUser->name }}">
-                                                                    {{ $createdByUser->name }}
+                                                                <option value="{{ $createdByUser }}">
+                                                                    {{ $createdByUser }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -85,8 +85,8 @@
                                                         <select data-column="7" class="form-control select2 filter-select">
                                                             <option value="">Select Updated By</option>
                                                             @foreach ($updatedByUsers as $updatedByUser)
-                                                                <option value="{{ $updatedByUser->name }}">
-                                                                    {{ $updatedByUser->name }}
+                                                                <option value="{{ $updatedByUser }}">
+                                                                    {{ $updatedByUser }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -107,6 +107,9 @@
                                             @endcan
                                             @can('{{ $permissionName }} Read Action')
                                                 <th width="20%">Action</th>
+                                            @endcan
+                                            @can('{{ $permissionName }} Read Code')
+                                                <th width="20%">Code</th>
                                             @endcan
                                             @can('{{ $permissionName }} Read Name')
                                                 <th width="20%">Name</th>
@@ -141,6 +144,9 @@
                                             @endcan
                                             @can('{{ $permissionName }} Read Action')
                                                 <th width="20%">Action</th>
+                                            @endcan
+                                            @can('{{ $permissionName }} Read Code')
+                                                <th width="20%">Code</th>
                                             @endcan
                                             @can('{{ $permissionName }} Read Name')
                                                 <th width="20%">Name</th>
@@ -352,7 +358,7 @@
                     targets: 0
                 }],
                 "order": [
-                    [1, 'asc']
+                    [6, 'asc']
                 ],
                 // colum serial number order with id --->
                 columns: [
@@ -365,8 +371,16 @@
                     @endcan
                     @can('Job Type Read Action')
                         {
-                            data: 'action2',
-                            name: 'action2',
+                            data: 'action',
+                            name: 'action',
+                            width: '100%',
+                            defaultContent: ''
+                        },
+                    @endcan
+                    @can('Job Type Read Code')
+                        {
+                            data: 'code',
+                            name: 'code',
                             width: '100%',
                             defaultContent: ''
                         },

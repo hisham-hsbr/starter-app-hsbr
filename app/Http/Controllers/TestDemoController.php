@@ -45,9 +45,9 @@ class TestDemoController extends Controller
     public function index()
     {
         $testDemos = TestDemo::all();
-        $createdByUsers = $testDemos->sortBy('createdBy')->pluck('createdBy')->unique();
-        $updatedByUsers = $testDemos->sortBy('updatedBy')->pluck('updatedBy')->unique();
-        // dd('I am at Test Demo Index');
+        $createdByUsers = $testDemos->sortBy('created_by')->pluck('created_by')->unique();
+        $updatedByUsers = $testDemos->sortBy('updated_by')->pluck('updated_by')->unique();
+
         return view('back_end.test.demos.index')->with(
             [
                 'headName' => $this->headName,
@@ -73,68 +73,16 @@ class TestDemoController extends Controller
                 return $testDemo->id;
             })
 
-            ->editColumn('status', function (TestDemo $testDemo) {
+            // ->editColumn('status', function (TestDemo $testDemo) {
 
-                $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
-                $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
+            //     $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
+            //     $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
 
-                $activeId = ($testDemo->status);
-
-                if ($activeId == 1) {
-                    $activeId = $active;
-                } else {
-                    $activeId = $inActive;
-                }
-                return $activeId;
-            })
-
-
-            ->editColumn('created_by', function (TestDemo $testDemo) {
-
-                return ucwords($testDemo->CreatedBy->name);
-            })
-
-
-            ->editColumn('updated_by', function (TestDemo $testDemo) {
-
-                return ucwords($testDemo->UpdatedBy->name);
-            })
-            ->addColumn('created_at', function (TestDemo $testDemo) {
-                return $testDemo->created_at->format('d-M-Y h:m');
-            })
-            ->addColumn('updated_at', function (TestDemo $testDemo) {
-
-                return $testDemo->updated_at->format('d-M-Y h:m');
-            })
-
-            ->addColumn('editLink', function (TestDemo $testDemo) {
-
-                $editLink = '<a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit"></i></a>';
-                return $editLink;
-            })
-            ->addColumn('deleteLink', function (TestDemo $testDemo) {
-                $CSRFToken = "csrf_field()";
-                $deleteLink = '
-                        <button class="btn btn-link delete-test_demo" data-test_demo_id="' . $testDemo->id . '" type="submit"><i
-                                class="fa-solid fa-trash-can text-danger"></i>
-                        </button>';
-                return $deleteLink;
-            })
+            //     $status = $testDemo->status == 'Active' ? $active : $inActive;
+            //     return $status;
+            // })
 
             ->addColumn('action', function (TestDemo $testDemo) {
-                $CSRFToken = "csrf_field()";
-                $action =
-                    '
-                        <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
-                        <a href="' . route('test-demos.pdf', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
-                        <a href="' . route('test-demos.edit', $testDemo->id) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
-                        <button class="btn btn-link delete-test_demo" data-test_demo_id="' . $testDemo->id . '" type="submit"><i
-                                class="fa-solid fa-trash-can text-danger"></i>
-                        </button>
-                        ';
-                return $action;
-            })
-            ->addColumn('action2', function (TestDemo $testDemo) {
                 $CSRFToken = "csrf_field()";
                 $action2 =
                     '
@@ -165,7 +113,7 @@ class TestDemoController extends Controller
             })
 
 
-            ->rawColumns(['status', 'editLink', 'deleteLink', 'action2'])
+            ->rawColumns(['status', 'editLink', 'deleteLink', 'action'])
             ->toJson();
     }
 
@@ -175,7 +123,12 @@ class TestDemoController extends Controller
     public function create()
     {
         return view('back_end.test.demos.create')->with(
-            []
+
+            [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
+            ]
         );
     }
 
@@ -283,10 +236,7 @@ class TestDemoController extends Controller
      */
     public function destroy($id)
     {
-        // dd($id);
-        // encrypt($id);
-        // $testDemo  = TestDemo::findOrFail(decrypt($id));
-        $testDemo  = TestDemo::findOrFail($id);
+        $testDemo  = TestDemo::findOrFail(decrypt($id));
         $testDemo->delete();
 
         return redirect()->route('testDemos.index')->with(
@@ -297,7 +247,7 @@ class TestDemoController extends Controller
     }
     public function forceDestroy($id)
     {
-        $testDemo  = TestDemo::findOrFail($id);
+        $testDemo  = TestDemo::findOrFail(decrypt($id));
         $testDemo->forceDelete();
 
         return redirect()->route('testDemos.index')->with(

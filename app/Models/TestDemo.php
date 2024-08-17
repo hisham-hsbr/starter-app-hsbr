@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use App\Casts\StatusCast;
+use App\Casts\StatusIconCast;
+use App\Casts\TimeZoneCast;
+use App\Casts\TitleCast;
+use App\Casts\UserNameCast;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +23,15 @@ class TestDemo extends Model
         'name',
         'status'
     ];
+    protected $casts = [
+        'created_at' => TimeZoneCast::class,
+        'updated_at' => TimeZoneCast::class,
+        'created_by' => UserNameCast::class,
+        'updated_by' => UserNameCast::class,
+        'local_name' => TitleCast::class,
+        'name' => TitleCast::class,
+        'status' => StatusIconCast::class,
+    ];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -27,7 +41,7 @@ class TestDemo extends Model
         if ($run_seeder_disable == 'Y') {
 
             return LogOptions::defaults()
-                ->logOnly(['name', 'local_name', 'description', 'status', 'created_at', 'updated_at'])
+                ->logOnly(['code', 'name', 'local_name', 'description', 'status', 'created_at', 'updated_at', 'deleted_at'])
                 ->setDescriptionForEvent(fn(string $eventName) => "$useLogName {$eventName}")
                 ->useLogName($useLogName)
                 ->logOnlyDirty();
@@ -40,18 +54,6 @@ class TestDemo extends Model
                 ->useLogName($useLogName)
                 ->logOnlyDirty();
         }
-    }
-
-    public function getCreatedAtAttribute()
-    {
-        $time_zone = Auth::user()->timeZone->time_zone;
-        return Carbon::parse($this->attributes['created_at'])->setTimezone($time_zone);
-    }
-
-    public function getUpdatedAtAttribute()
-    {
-        $time_zone = Auth::user()->timeZone->time_zone;
-        return Carbon::parse($this->attributes['updated_at'])->setTimezone($time_zone);
     }
 
     public function createdBy()

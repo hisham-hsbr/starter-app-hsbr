@@ -24,7 +24,7 @@
          @endcan <!-- Permission Menu End -->
          <!-- Menu Activity Logs -->
          @can('Activity Logs Read')
-             <x-back-end.layouts.sidebar-nav-multi-level head="Activity Logs" href="{{ route('activityLogs.index') }}"
+             <x-back-end.layouts.sidebar-nav-multi-level head="Activity Logs" href="{{ route('activity-logs.index') }}"
                  menu_open="" active="{{ request()->is('admin/users-management/activity-logs*') ? 'active' : '' }}"
                  menu_icon="fa fa-history" drop_icon="" />
          @endcan <!-- Activity Logs Menu End -->

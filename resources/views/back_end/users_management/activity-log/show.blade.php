@@ -1,26 +1,28 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Activity Log Show')
+@section('PageHead')
+    {{ ucwords(__('my.show')) }}
+@endsection
 
-@section('PageTitle', 'Activity Log Show')
+@section('PageTitle')
+    {{ ucwords(__('my.show')) }}
+@endsection
+
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="/admin/dashboard">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="/admin/activityLogs">activityLogs</a></li>
-    <li class="breadcrumb-item active">Show</li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.show')) }}</li>
 @endsection
 
 @section('headLinks')
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet"
-        href="{{ asset('back_end_links/adminLinks/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <!-- Select2 -->
-    <link rel="stylesheet" href="{{ asset('back_end_links/adminLinks/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('back_end_links/adminLinks/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
 @endsection
 
-@section('actionTitle', 'Activity Log Show')
+@section('actionTitle')
+    {{ ucwords(__('my.show')) }}
+@endsection
+<x-test-component />
+
 @section('mainContent')
     <div class="container-fluid">
         @can('Activity Log View')
@@ -34,7 +36,7 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <div class="card-body">
-                            <div style="border-style: groove;" class="form-group row p-3">
+                            <div style="border-style: groove;" class="p-3 form-group row">
                                 <div class="col-sm-6">
                                     <label class="col-sm-4">Log Name</label>
                                     <label><code>: {{ $activityLog->log_name }}</code></label>
@@ -75,7 +77,7 @@
                                 </div>
 
                                 @foreach ($activityLog->properties as $key => $value)
-                                    <div class="col-md-6 pt-2">
+                                    <div class="pt-2 col-md-6">
                                         <table class="table table-bordered">
 
                                             <thead>
@@ -109,8 +111,8 @@
 
                     <!-- /.card-body -->
                     <div class="">
-                        <a type="button" href="{{ route('activityLogs.index') }}"
-                            class="btn btn-warning float-right ml-1">Back</a>
+                        <a type="button" href="{{ route('activity-logs.index') }}"
+                            class="float-right ml-1 btn btn-warning">Back</a>
                     </div>
                     <!-- /.card-footer -->
 
@@ -128,7 +130,7 @@
 @section('footerLinks')
 
 
-    <x-message.message />
+    <x-back-end.message.message />
 
 
 

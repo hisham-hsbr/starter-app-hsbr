@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,6 +19,7 @@ class TestDemoFactory extends Factory
     public function definition(): array
     {
         return [
+            'code' => Str::random(10),
             'name' => fake()->name(),
             'local_name' => fake()->name(),
             'status' => rand(1, 0),

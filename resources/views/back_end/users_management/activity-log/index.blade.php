@@ -1,19 +1,28 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Activity Logs Index')
+@section('PageHead')
+    {{ ucwords(__('my.index')) }}
+@endsection
 
-@section('PageTitle', 'Activity Logs Index')
+@section('PageTitle')
+    {{ ucwords(__('my.index')) }}
+@endsection
+
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-    <li class="breadcrumb-item"><a href="/admin/users-management/activity-logs">Activity Logs</a></li>
-    <li class="breadcrumb-item active">Index</li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.index')) }}</li>
 @endsection
 
 @section('headLinks')
-    <x-links.header-links-dataTable />
+    <x-back-end.plugins.dataTable-head />
 @endsection
 
-@section('actionTitle', 'Activity Logs Index')
+@section('actionTitle')
+    {{ ucwords(__('my.index')) }}
+@endsection
+<x-test-component />
+
 @section('mainContent')
     <section class="content">
         <div class="container-fluid">
@@ -22,16 +31,17 @@
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <x-layouts.div-clearfix>
+                            <x-back-end.layouts.div-clearfix>
                                 @can('Activity Log Settings')
-                                    <x-form.button-href button_type="" button_oneclick="" button_class="btn btn-default"
-                                        href="" button_icon="fa fa-cog" button_name="Settings" />
+                                    <x-back-end.form.button-href button_type="" button_oneclick=""
+                                        button_class="btn btn-default" href="" button_icon="fa fa-cog"
+                                        button_name="Settings" />
                                 @endcan {{-- Activity Log Settings End --}}
                                 @can('Activity Log Table')
-                                    <x-form.button button_type="" button_oneclick="Refresh()" button_class="btn btn-success"
-                                        button_icon="fa fa-refresh" button_name="Refresh" />
+                                    <x-back-end.form.button button_type="" button_oneclick="Refresh()"
+                                        button_class="btn btn-success" button_icon="fa fa-refresh" button_name="Refresh" />
                                 @endcan {{-- Activity Log Table --}}
-                            </x-layouts.div-clearfix>
+                            </x-back-end.layouts.div-clearfix>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -110,9 +120,12 @@
 @section('footerLinks')
 
 
-    <x-message.message />
+    <x-back-end.script.delete-confirmation />
+    <x-back-end.script.force-delete-confirmation />
+    <x-back-end.message.message />
+    <x-back-end.script.table-update />
+    <x-back-end.plugins.dataTable-footer />
 
-    <x-links.footer-links-dataTable />
     <script>
         $(function() {
 
@@ -121,37 +134,7 @@
                 "lengthChange": true,
                 "autoWidth": true,
                 "processing": true,
-
-                // "paging": true,
-                // "searching": false,
-                // "ordering": true,
-                // "info": true,
-
-                // dom: 'Bfrtip',
                 dom: '<"html5buttons"B>lTftigp',
-                // "fnDrawCallback": function(oSettings) {
-                //     $('.delete-permission').on('click', function() {
-                //         var permissionID = $(this).data('permission_id');
-                //         var isReady = confirm("Are you sure to delete");
-                //         var myHeaders = new Headers({
-                //             "X-CSRF-TOKEN": $("input[name='_token']").val()
-                //         });
-                //         if (isReady) {
-                //             fetch("/admin/users-management/permissions/destroy" +
-                //                 permissionID, {
-                //                     method: 'DELETE',
-                //                     headers: myHeaders,
-                //                 }).then(function(response) {
-                //                 return response.json();
-                //             });
-                //             $('#example1').DataTable().ajax.reload();
-                //             toastr.danger("Permission Deleted");
-                //         }
-
-                //     });
-                // },
-
-                // "buttons": ["excel", "pdf", "print", "colvis"],
                 buttons: [
                     @can('Activity Log Table Export Excel')
                         'excel',
@@ -180,7 +163,7 @@
                 pagingType: "full_numbers",
                 processing: true,
                 serverSide: true,
-                ajax: '{!! route('activityLogs.get') !!}',
+                ajax: '{!! route('activity-logs.get') !!}',
 
                 // <--- colum serial number order with id
                 "columnDefs": [{
@@ -189,7 +172,7 @@
                     targets: 0
                 }],
                 "order": [
-                    [1, 'asc']
+                    [6, 'des']
                 ],
                 // colum serial number order with id --->
                 columns: [
