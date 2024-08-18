@@ -63,7 +63,8 @@ class TestDemoController extends Controller
     public function testDemosGet()
     {
 
-        $testDemos = TestDemo::all();
+        $testDemos = TestDemo::active()->get();
+        // $testDemos = TestDemo::all();
         // $testDemos = TestDemo::withTrashed()->get();
 
 
@@ -73,18 +74,8 @@ class TestDemoController extends Controller
                 return $testDemo->id;
             })
 
-            // ->editColumn('status', function (TestDemo $testDemo) {
-
-            //     $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
-            //     $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
-
-            //     $status = $testDemo->status == 'Active' ? $active : $inActive;
-            //     return $status;
-            // })
-
             ->addColumn('action', function (TestDemo $testDemo) {
-                $CSRFToken = "csrf_field()";
-                $action2 =
+                $action =
                     '
                     <div class="btn-group">
                         <button type="button" class="btn btn-info">Action</button>
@@ -102,18 +93,11 @@ class TestDemoController extends Controller
                         </div>
                     </div>
                     ';
-
-
-
-
-
-
-
-                return $action2;
+                return $action;
             })
 
 
-            ->rawColumns(['status', 'editLink', 'deleteLink', 'action'])
+            ->rawColumns(['action', 'status_with_icon'])
             ->toJson();
     }
 

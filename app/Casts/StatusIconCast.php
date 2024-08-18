@@ -16,9 +16,17 @@ class StatusIconCast implements CastsAttributes
     {
         $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
         $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
+        $delete = '<span style="background-color: #ff0000;color: white;padding: 3px;width:100px;">Deleted</span>';
 
-        $status = $value == 1 ? $active : $inActive;
-        return $status;
+        $value = $attributes['status'];
+        $deletedAt = $attributes['deleted_at'];
+
+        if ($deletedAt == null) {
+
+            return $value == 1 ? $active : $inActive;
+        } else {
+            return $value = $delete;
+        }
     }
 
     /**

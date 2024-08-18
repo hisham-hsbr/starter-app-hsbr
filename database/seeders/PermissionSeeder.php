@@ -18,14 +18,45 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'Application Settings', 'parent' => 'Developer', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
 
 
+        Permission::create(['name' => 'Admin Settings', 'parent' => 'Developer', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Dashboard Menu', 'parent' => 'Default', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Sidebar Search Menu', 'parent' => 'Default', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        // <= Default
+
+        // => Test Demo
+        Permission::create(['name' => 'Test Demo Create', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Show', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Edit', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Delete', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Force Delete', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Settings', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Import', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Filter', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+
+        Permission::create(['name' => 'Test Demo Read Code', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read Name', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read Local Name', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+
+        Permission::create(['name' => 'Test Demo Read Status', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read Created By', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read Created At', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read Updated By', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Read Updated At', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+
+        Permission::create(['name' => 'Test Demo Table Export Excel', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Table Export PDF', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Table Print', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Table Copy', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        Permission::create(['name' => 'Test Demo Table Column Visible', 'parent' => 'Test Demo', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
+        // <= Test Demo
+
+
+
+
         $run_test_seeder_disable = env('RUN_TEST_SEEDER_DISABLE');
 
         if ($run_test_seeder_disable == 'Y') {
-
-            Permission::create(['name' => 'Admin Settings', 'parent' => 'Developer', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
-            Permission::create(['name' => 'Dashboard Menu', 'parent' => 'Default', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
-            Permission::create(['name' => 'Sidebar Search Menu', 'parent' => 'Default', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);
-            // <= Default
 
             // => User
             Permission::create(['name' => 'User Read', 'parent' => 'User', 'guard_name' => 'web', 'status' => '1', 'created_by' => '1', 'updated_by' => '1']);

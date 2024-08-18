@@ -395,8 +395,8 @@
                     @endcan
                     @can('Job Type Read Local Name')
                         {
-                            data: 'status',
-                            name: 'status',
+                            data: 'local_name',
+                            name: 'local_name',
                             width: '100%',
                             defaultContent: ''
                         },

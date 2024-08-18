@@ -30,43 +30,25 @@ class TestDemo extends Model
         'updated_by' => UserNameCast::class,
         'local_name' => TitleCast::class,
         'name' => TitleCast::class,
-        // 'status' => StatusCast::class,
-        // 'status_with_icon' => StatusIconCast::class,
+        'status' => StatusCast::class,
+        'status_with_icon' => StatusIconCast::class,
     ];
     protected $appends = ['status_with_icon'];
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
     public function getActivitylogOptions(): LogOptions
     {
         $useLogName = 'TestDemo';
-        $run_seeder_disable = env('RUN_SEEDER_DISABLE');
-
-        if ($run_seeder_disable == 'Y') {
-
-            return LogOptions::defaults()
-                ->logOnly(['code', 'name', 'local_name', 'description', 'status', 'created_at', 'updated_at', 'deleted_at'])
-                ->setDescriptionForEvent(fn(string $eventName) => "$useLogName {$eventName}")
-                ->useLogName($useLogName)
-                ->logOnlyDirty();
-        }
-        if ($run_seeder_disable == 'N') {
-
-            return LogOptions::defaults()
-                ->logOnly(['code', 'name'])
-                ->setDescriptionForEvent(fn(string $eventName) => "$useLogName {$eventName}")
-                ->useLogName($useLogName)
-                ->logOnlyDirty();
-        }
+        return LogOptions::defaults()
+            ->logOnly(['code', 'name', 'local_name', 'description', 'status', 'created_at', 'updated_at', 'deleted_at'])
+            ->setDescriptionForEvent(fn(string $eventName) => "$useLogName {$eventName}")
+            ->useLogName($useLogName)
+            ->logOnlyDirty();
     }
 
-
-
-    public function getStatusWithIconAttribute()
-    {
-        $active = `<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>`;
-        $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
-        if ($this->status == 1) return $active;
-        else return "InActive";
-    }
     public function createdBy()
     {
         return $this->belongsTo('App\Models\User', 'created_by', 'id');

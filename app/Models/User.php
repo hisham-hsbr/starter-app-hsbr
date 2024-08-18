@@ -29,38 +29,14 @@ implements MustVerifyEmail
         'password',
     ];
 
-    //-->start laravel-activitylog
-    //only the `deleted` event will get logged automatically
-    // protected static $recordEvents = ['deleted'];
     public function getActivitylogOptions(): LogOptions
     {
-        $run_seeder_disable = env('RUN_SEEDER_DISABLE');
-
-        if ($run_seeder_disable == 'Y') {
-            return LogOptions::defaults()
-                ->logOnly(['name', 'last_name', 'dob', 'phone1', 'phone2', 'gender', 'avatar', 'email', 'status', 'blood.name', 'cityName.city', 'timeZone.time_zone', 'created_at', 'updated_at'])
-                // Chain fluent methods for configuration options
-
-                ->setDescriptionForEvent(fn (string $eventName) => "This User has been {$eventName}")
-                ->useLogName('User')
-                // ->dontLogIfAttributesChangedOnly(['email']) //By default the updated_at attribute is not ignored and will trigger an activity being logged
-                ->logOnlyDirty();
-            // ->dontSubmitEmptyLogs(); //Prevent save logs items that have no changed attribute
-        }
-        if ($run_seeder_disable == 'N') {
-            return LogOptions::defaults()
-                ->logOnly(['name'])
-                // Chain fluent methods for configuration options
-
-                ->setDescriptionForEvent(fn (string $eventName) => "This User has been {$eventName}")
-                ->useLogName('User')
-                // ->dontLogIfAttributesChangedOnly(['email']) //By default the updated_at attribute is not ignored and will trigger an activity being logged
-                ->logOnlyDirty();
-            // ->dontSubmitEmptyLogs(); //Prevent save logs items that have no changed attribute
-        }
+        return LogOptions::defaults()
+            ->logOnly(['name', 'last_name', 'dob', 'phone1', 'phone2', 'gender', 'avatar', 'email', 'status', 'blood.name', 'cityName.city', 'timeZone.time_zone', 'created_at', 'updated_at'])
+            ->setDescriptionForEvent(fn(string $eventName) => "This User has been {$eventName}")
+            ->useLogName('User')
+            ->logOnlyDirty();
     }
-
-    // <--End laravel-activitylog
 
     /**
      * The attributes that should be hidden for serialization.

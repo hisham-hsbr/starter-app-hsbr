@@ -67,6 +67,10 @@ class UserController extends Controller
         } else {
             $users = User::where('id', '>', 2)->get();
         }
+
+        // Auth::user()->hasRole('Developer') ? ($users = User::all()) : ($users = User::where('id', '>', 2)->get());
+
+
         return Datatables::of($users)
 
             ->setRowId(function ($User) {
