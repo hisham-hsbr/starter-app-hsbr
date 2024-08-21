@@ -1,17 +1,17 @@
 @extends('back_end.layouts.app')
 
 @section('PageHead')
-    {{ ucwords(__('my.create')) }}
+    {{ ucwords(__('my.edit')) }}
 @endsection
 
 @section('PageTitle')
-    {{ ucwords(__('my.create')) }}
+    {{ ucwords(__('my.edit')) }}
 @endsection
 
 @section('pageNavHeader')
     <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
-    <li class="breadcrumb-item active">{{ ucwords(__('my.create')) }}</li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.edit')) }}</li>
 @endsection
 
 @section('headLinks')
@@ -19,7 +19,7 @@
 @endsection
 
 @section('actionTitle')
-    {{ ucwords(__('my.create')) }}
+    {{ ucwords(__('my.edit')) }}
 @endsection
 <x-test-component />
 
@@ -32,10 +32,11 @@
             </div>
             <!-- left column -->
             <div class="col-md-10">
-                @can('{{ $permissionName }} Create')
-                    <form role="form" action="{{ route($routeName . '.store') }}" method="post" enctype="multipart/form-data"
-                        id="quickForm">
+                @can('{{ N }} Edit')
+                    <form role="form" action="{{ route($routeName . '.update', encrypt($testDemo->id)) }}" method="post"
+                        enctype="multipart/form-data" id="quickForm">
                         {{ csrf_field() }}
+                        {{ method_field('PATCH') }}
                         <div class="card-body">
                             <!-- /.card-header -->
                             <div class="row">
@@ -43,23 +44,23 @@
 
                                 <x-back-end.form.form-group-label-input div_class="col-sm-6" label_for="code"
                                     lable_class="required" label_name="Code" input_type="text" input_name="code" input_id="code"
-                                    input_style="" input_class="" input_value="{{ old('code') }}"
+                                    input_style="" input_class="" input_value="{{ $testDemo->code }}"
                                     input_placeholder="Enter code" />
-
                                 <x-back-end.form.form-group-label-input div_class="col-sm-6" label_for="name"
-                                    lable_class="required" label_name="{{ $headName }} Name" input_type="text"
-                                    input_name="name" input_id="name" input_style="" input_class=""
-                                    input_value="{{ old('name') }}" input_placeholder="{{ $headName }} Name" />
+                                    lable_class="required" label_name="Job Type Name" input_type="text" input_name="name"
+                                    input_id="name" input_style="" input_class="" input_value="{{ $testDemo->name }}"
+                                    input_placeholder="Job Type Name" />
 
                                 <x-back-end.form.form-group-label-input div_class="col-sm-6" label_for="local_name"
                                     lable_class="required" label_name="{{ $headName }} Local Name" input_type="text"
                                     input_name="local_name" input_id="local_name" input_style="" input_class=""
-                                    input_value="{{ old('local_name') }}" input_placeholder="Enter local_name" />
+                                    input_value="{{ $testDemo->local_name }}{{ old('local_name') }}"
+                                    input_placeholder="Enter local_name" />
 
-                                <div class="pt-2 pl-5 col-sm-10">
-                                    <input type="checkbox" class="form-check-input" name="default" value="1"
-                                        id="default" />
-                                    <label class="form-check-label" for="default">Is Default</label><br>
+                                <div class="col-sm-10 pl-5 pt-2">
+                                    <input type="checkbox" class="form-check-input" name="default" value="1" id="default"
+                                        @if ($testDemo->default == 1) {{ 'checked' }} @endif />
+                                    <label class="form-check-label" for="default">Is Default</label>
                                     @if ($errors->has('default'))
                                         <span class="text-danger">{{ $errors->first('default') }}</span>
                                     @endif
@@ -73,19 +74,19 @@
 
                         <div class="card-body">
                             <!-- /.card-header -->
-                            <div class="pt-2 pl-5 col-sm-10">
+                            <div class="col-sm-10 pl-5 pt-2">
                                 <input type="checkbox" class="form-check-input" name="status" value="1" id="status"
-                                    @if (Auth::user()->settings['default_status'] == 1) {{ 'checked' }} @endif />
-                                <label class="form-check-label" for="status">Active</label>
+                                    @if ($testDemo->status == 'Active') {{ 'checked' }} @endif />
+                                <label class="form-check-label" for="status">Active</label><br>
                                 @if ($errors->has('status'))
-                                    <span class="text-danger">{{ $errors->first('status') }}</span>
+                                    <span class="text-danger">** {{ $errors->first('status') }}</span>
                                 @endif
                             </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="">
-                            @can('{{ $permissionName }} Create')
-                                <button type="submit" class="float-right ml-1 btn btn-primary">Save</button>
+                            @can('{{ $permissionName }} Edit')
+                                <button type="submit" class="float-right ml-1 btn btn-primary">Update</button>
                             @endcan
                             <a type="button" href="{{ route($routeName . '.index') }}"
                                 class="float-right ml-1 btn btn-warning">Back</a>
@@ -93,6 +94,7 @@
                         <!-- /.card-footer -->
                     </form>
                 @endcan
+
             </div>
             <!--/.col (left) -->
 
@@ -113,8 +115,15 @@
     <x-back-end.plugins.jquery-validation-footer />
     <x-back-end.script.status-default-value-changing />
 
+
+
     <script>
         $(function() {
+            // $.validator.setDefaults({
+            //     submitHandler: function() {
+            //         alert("Form successful submitted!");
+            //     }
+            // });
             jQuery.validator.addMethod("noSpace", function(value, element) {
                 return value.indexOf(" ") < 0 && value != "";
             });

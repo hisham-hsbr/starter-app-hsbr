@@ -1,26 +1,30 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Create')
+@section('PageHead')
+    {{ ucwords(__('my.edit')) }}
+@endsection
 
-@section('PageTitle', 'Create')
+@section('PageTitle')
+    {{ ucwords(__('my.edit')) }}
+@endsection
+
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
-    <li class="breadcrumb-item active">Create</li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.edit')) }}</li>
 @endsection
 
 @section('headLinks')
-    <!-- Bootstrap4 Duallistbox -->
-    <link rel="stylesheet"
-        href="{{ asset('back_end_links/adminLinks/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <!-- Select2 -->
-    <link rel="stylesheet" href="{{ asset('back_end_links/adminLinks/plugins/select2/css/select2.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('back_end_links/adminLinks/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <x-back-end.plugins.dual-list-box-head />
+    <x-back-end.plugins.select-two-head />
+
 @endsection
 
-@section('actionTitle', 'User Edit')
+@section('actionTitle')
+    {{ ucwords(__('my.edit')) }}
+@endsection
+<x-test-component />
+
 @section('mainContent')
     <div class="container-fluid">
         @can('User Edit')
@@ -28,7 +32,7 @@
             <div class="row">
 
                 <div class="col-10">
-                    <x-back_end.form.button button_type="" button_oneclick="copyToClipboard()"
+                    <x-back-end.form.button button_type="" button_oneclick="copyToClipboard()"
                         button_class="btn btn-success btn-xs" button_icon="fa fa-clipboard"
                         button_name=" Copy User Name & Password" />
                 </div>
@@ -136,7 +140,7 @@
 
                                         <div class="form-group col-sm-4">
                                             <label for="password" class="required col-form-label">Password</label>
-                                            <x-back_end.form.button button_type="button" button_oneclick="generate()"
+                                            <x-back-end.form.button button_type="button" button_oneclick="generate()"
                                                 button_class="btn btn-warning btn-xs generate-password"
                                                 button_icon="fa fa-plus" button_name="Generate" />
                                             <input type="password" name="password" id="password" class="form-control"
@@ -375,7 +379,7 @@
 
                 <div class="mt-3 col-10">
                     <br>
-                    <x-back_end.form.button button_type="" button_oneclick="copyToClipboard()"
+                    <x-back-end.form.button button_type="" button_oneclick="copyToClipboard()"
                         button_class="btn btn-success btn-xs" button_icon="fa fa-clipboard"
                         button_name="   Copy User Name & Password" />
                 </div>
@@ -429,14 +433,14 @@
         });
     </script>
 
-    <x-back_end.script.password-and-username-copy-to-clipboard />
-    <x-back_end.script.password-generate />
+    <x-back-end.script.password-and-username-copy-to-clipboard />
+    <x-back-end.script.password-generate />
 
-    <x-back_end.message.message />
+    <x-back-end.message.message />
 
-    <x-back_end.plugins.jquery-validation-footer />
+    <x-back-end.plugins.jquery-validation-footer />
 
-    <x-back_end.validation.user-jquery-validation />
+    <x-back-end.validation.user-jquery-validation />
 
 
 

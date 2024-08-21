@@ -43,7 +43,7 @@ class TestDemo extends Model
     {
         $useLogName = 'TestDemo';
         return LogOptions::defaults()
-            ->logOnly(['code', 'name', 'local_name', 'description', 'status', 'created_at', 'updated_at', 'deleted_at'])
+            ->logOnly(['code', 'name', 'local_name', 'description', 'default', 'status', 'created_at', 'updated_at', 'deleted_at'])
             ->setDescriptionForEvent(fn(string $eventName) => "$useLogName {$eventName}")
             ->useLogName($useLogName)
             ->logOnlyDirty();

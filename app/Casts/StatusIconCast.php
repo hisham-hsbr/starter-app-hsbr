@@ -15,18 +15,18 @@ class StatusIconCast implements CastsAttributes
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
+        $activeWithDefault = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span><span style="background-color: #0703fc;color: white;padding: 3px;margin-left: 4px;width:100px;">Default</span>';
         $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
         $delete = '<span style="background-color: #ff0000;color: white;padding: 3px;width:100px;">Deleted</span>';
 
-        $value = $attributes['status'];
+        // checking status,deleted_at & default
         $deletedAt = $attributes['deleted_at'];
+        $default = $attributes['default'];
+        $value = $attributes['status'];
 
-        if ($deletedAt == null) {
-
-            return $value == 1 ? $active : $inActive;
-        } else {
-            return $value = $delete;
-        }
+        return $deletedAt === null
+            ? ($value == 1 ? ($default == 1 ? $activeWithDefault : $active) : $inActive)
+            : $delete;
     }
 
     /**

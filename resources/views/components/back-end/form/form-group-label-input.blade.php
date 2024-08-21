@@ -40,6 +40,9 @@
     <label for="{{ $label_for }}" class="{{ $lable_class }} col-form-label">{{ $label_name }}</label>
     <input type="{{ $input_type }}" name="{{ $input_name }}" id="{{ $input_id }}" style="{{ $input_style }}"
         class="form-control{{ $input_class }}" value="{{ $input_value }}" placeholder="{{ $input_placeholder }}">
+    @if ($errors->has($input_name))
+        <span class="text-danger">{{ $errors->first($input_name) }}</span>
+    @endif
 </div>
 
 

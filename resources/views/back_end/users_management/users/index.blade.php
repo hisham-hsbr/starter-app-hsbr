@@ -1,19 +1,28 @@
 @extends('back_end.layouts.app')
 
-@section('PageHead', 'Index')
+@section('PageHead')
+    {{ ucwords(__('my.index')) }}
+@endsection
 
-@section('PageTitle', 'Index')
+@section('PageTitle')
+    {{ ucwords(__('my.index')) }}
+@endsection
+
 @section('pageNavHeader')
-    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('back-end.dashboard') }}">{{ ucwords(__('my.dashboard')) }}</a></li>
     <li class="breadcrumb-item"><a href="{{ route($routeName . '.index') }}">{{ $headName }}</a></li>
-    <li class="breadcrumb-item active">Index</li>
+    <li class="breadcrumb-item active">{{ ucwords(__('my.index')) }}</li>
 @endsection
 
 @section('headLinks')
-    <x-back_end.plugins.dataTable-head />
+    <x-back-end.plugins.dataTable-head />
 @endsection
 
-@section('actionTitle', 'Users Index')
+@section('actionTitle')
+    {{ ucwords(__('my.index')) }}
+@endsection
+<x-test-component />
+
 @section('mainContent')
     <section class="content">
         <div class="container-fluid">
@@ -23,22 +32,22 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             @can('User Read')
-                                <x-back_end.layouts.div-clearfix>
+                                <x-back-end.layouts.div-clearfix>
                                     @can('User Create')
-                                        <x-back_end.form.button-href button_type="" button_oneclick=""
+                                        <x-back-end.form.button-href button_type="" button_oneclick=""
                                             button_class="btn btn-primary" href="{{ route('users.create') }}"
                                             button_icon="fa fa-add" button_name="Add" />
                                     @endcan {{-- User Create End --}}
                                     @can('User Settings')
-                                        <x-back_end.form.button-href button_type="" button_oneclick=""
+                                        <x-back-end.form.button-href button_type="" button_oneclick=""
                                             button_class="btn btn-default" href="{{ route('users.create') }}"
                                             button_icon="fa fa-cog" button_name="Settings" />
                                     @endcan {{-- User Settings End --}}
                                     @can('User Read')
-                                        <x-back_end.form.button button_type="" button_oneclick="Refresh()"
+                                        <x-back-end.form.button button_type="" button_oneclick="Refresh()"
                                             button_class="btn btn-success" button_icon="fa fa-refresh" button_name="Refresh" />
                                     @endcan {{-- User Read --}}
-                                </x-back_end.layouts.div-clearfix>
+                                </x-back-end.layouts.div-clearfix>
                                 @can('User Read')
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
@@ -191,10 +200,11 @@
 @section('actionFooter', 'Footer')
 @section('footerLinks')
 
-    <x-back_end.message.message />
-    <x-back_end.message.table-update />
-
-    <x-back_end.plugins.dataTable-footer />
+    <x-back-end.script.delete-confirmation />
+    <x-back-end.script.force-delete-confirmation />
+    <x-back-end.message.message />
+    <x-back-end.script.table-update />
+    <x-back-end.plugins.dataTable-footer />
 
     <script>
         $(function() {

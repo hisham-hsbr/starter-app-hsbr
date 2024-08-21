@@ -52,6 +52,11 @@
                                             {{ $activityLog->subject_type }}</code></label>
                                 </div>
                                 <div class="col-sm-6">
+                                    <label class="col-sm-4">Subject ID</label>
+                                    <label><code>:
+                                            {{ $activityLog->subject_id }}</code></label>
+                                </div>
+                                <div class="col-sm-6">
                                     <label class="col-sm-4">Event</label>
                                     <label><code>: {{ $activityLog->event }}</code></label>
                                 </div>
@@ -64,11 +69,6 @@
                                     <label class="col-sm-4">Event User</label>
                                     <label><code>:
                                             {{ $activityLog->activityUser->name }}</code></label>
-                                </div>
-                                <div class="col-sm-6">
-                                    {{-- <label class="col-sm-4">Updated At</label>
-                                    <label><code>:
-                                            {{ $activityLog->updated_at }}</code></label> --}}
                                 </div>
                                 <div class="col-sm-6">
                                     <label class="col-sm-4">Created At</label>

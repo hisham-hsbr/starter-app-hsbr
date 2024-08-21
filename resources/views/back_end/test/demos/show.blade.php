@@ -15,7 +15,7 @@
 @endsection
 
 @section('headLinks')
-
+    <x-back-end.plugins.dataTable-head />
 @endsection
 
 @section('actionTitle')
@@ -83,6 +83,72 @@
                 <!--/.col (left) -->
 
             </div>
+
+            <h1>History</h1>
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Sn</th>
+                        <th>Description</th>
+                        <th>Event</th>
+                        <th>User</th>
+                        <th>Created At</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($activityLog as $a)
+                        <tr>
+                            <td>-</td>
+                            <td>{{ $a->description }}</td>
+                            <td>{{ $a->event }}</td>
+                            <td>{{ $a->activityUser->name }}</td>
+                            <td>{{ $a->created_at }}</td>
+                            <td><a href="{{ route('activity-logs.show', $a->id) }}" class="ml-2"><i
+                                        class="fa-solid fa fa-eye"></i></a></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Sn</th>
+                        <th>Description</th>
+                        <th>Event</th>
+                        <th>User</th>
+                        <th>Created At</th>
+                        <th>View</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            {{-- @foreach ($activityLog->properties as $key => $value)
+                    <div class="pt-2 col-md-6">
+                        <table class="table table-bordered">
+
+                            <thead>
+                                <tr>
+                                    <th colspan="2" class="bg-secondary color-palette">
+                                        @if ($key == 'attributes')
+                                            New {{ $activityLog->event }} {{ $activityLog->log_name }}
+                                        @elseif ($key == 'old')
+                                            Old {{ $activityLog->log_name }}
+                                        @endif
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($value as $lists => $data)
+                                    <tr class="bg-light color-palette">
+                                        <td style="color:red ;width: 10%">{{ $lists }}</td>
+                                        <td>{{ $data }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endforeach --}}
+
+
             <!-- /.row -->
         @endcan
     </div><!-- /.container-fluid -->
@@ -94,6 +160,31 @@
 
 
     <x-back-end.message.message />
+    <x-back-end.script.table-update />
+    <x-back-end.plugins.dataTable-footer />
+    <script>
+        $(function() {
+            $("#example1")
+                .DataTable({
+                    responsive: true,
+                    lengthChange: false,
+                    autoWidth: false,
+                    // buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                })
+                .buttons()
+                .container()
+                .appendTo("#example1_wrapper .col-md-6:eq(0)");
+            $("#example2").DataTable({
+                paging: true,
+                lengthChange: false,
+                searching: false,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                responsive: true,
+            });
+        });
+    </script>
 
 
 

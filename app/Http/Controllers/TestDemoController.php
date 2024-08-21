@@ -9,6 +9,8 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Activitylog\Models\Activity;
+use App\Http\Requests\TestDemo\StoreAndUpdateTestDemoRequest;
 
 class TestDemoController extends Controller
 {
@@ -63,9 +65,9 @@ class TestDemoController extends Controller
     public function testDemosGet()
     {
 
-        $testDemos = TestDemo::active()->get();
+        // $testDemos = TestDemo::active()->get();
         // $testDemos = TestDemo::all();
-        // $testDemos = TestDemo::withTrashed()->get();
+        $testDemos = TestDemo::withTrashed()->get();
 
 
         return Datatables::of($testDemos)
@@ -81,13 +83,13 @@ class TestDemoController extends Controller
                         <button type="button" class="btn btn-info">Action</button>
                         <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" ></button>
                         <div class="dropdown-menu" role="menu">
-                        <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa fa-eye text-success"></i></a>
-                        <a href="' . route('test-demos.pdf', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa-file-pdf"></i></a>
-                        <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2"><i class="fa-solid fa-edit text-warning"></i></a>
-                        <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" type="submit"><i
+                        <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2" title="View Details"><i class="fa-solid fa fa-eye text-success"></i></a>
+                        <a href="' . route('test-demos.pdf', encrypt($testDemo->id)) . '" class="ml-2" title="View PDF"><i class="fa-solid fa-file-pdf"></i></a>
+                        <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2" title="Edit"><i class="fa-solid fa-edit text-warning"></i></a>
+                        <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" type="submit" title="Soft Delete"><i
                                 class="fa-solid fa-eraser text-danger"></i>
                         </button>
-                        <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit"><i
+                        <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit" title="Hard Delete"><i
                                 class="fa-solid fa-trash-can text-danger"></i>
                         </button>
                         </div>
@@ -119,17 +121,21 @@ class TestDemoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAndUpdateTestDemoRequest $request)
     {
-        $this->validate($request, [
-            'code' => 'required|unique:testDemos,code',
-            'name' => 'required',
-        ]);
         $testDemo = new TestDemo();
 
 
         $testDemo->code  = $request->code;
         $testDemo->name = $request->name;
+        $testDemo->local_name = $request->local_name;
+
+        if ($request->default) {
+            TestDemo::where('default', 1)->update(['default' => null]);
+        }
+
+        $testDemo->default = $request->default;
+        // checking default -->
 
 
         if ($request->status == 0) {
@@ -143,7 +149,7 @@ class TestDemoController extends Controller
 
         $testDemo->save();
 
-        return redirect()->route('testDemos.index')->with(
+        return redirect()->route('test-demos.index')->with(
             [
                 'message_store' => 'TestDemo Created Successfully'
             ]
@@ -155,11 +161,13 @@ class TestDemoController extends Controller
      */
     public function show($testDemo)
     {
-        $testDemo = TestDemo::find(decrypt($testDemo));
+        $testDemo = TestDemo::withTrashed()->find(decrypt($testDemo));
+        $activityLog = Activity::where('subject_id', 128)->get();
 
         return view('back_end.test.demos.show')->with(
             [
                 'testDemo' => $testDemo,
+                'activityLog' => $activityLog,
                 'camelCase' => $this->camelCase,
                 'headName' => $this->headName,
                 'routeName' => $this->routeName,
@@ -173,10 +181,13 @@ class TestDemoController extends Controller
      */
     public function edit($testDemo)
     {
-        $testDemo = TestDemo::find($testDemo);
+        $testDemo = TestDemo::find(decrypt($testDemo));
 
         return view('back_end.test.demos.edit')->with(
             [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
                 'testDemo' => $testDemo
             ]
         );
@@ -185,17 +196,28 @@ class TestDemoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(StoreAndUpdateTestDemoRequest $request, $id)
     {
+        $id = decrypt($id);
         $this->validate($request, [
             'name' => 'required',
-            'code' => "required|unique:testDemos,code,$id",
+            'code' => "required|unique:test_demos,code,$id",
         ]);
         $testDemo = TestDemo::find($id);
 
+        // dd($request->all);
 
         $testDemo->code  = $request->code;
         $testDemo->name = $request->name;
+        $testDemo->local_name = $request->local_name;
+
+        if ($request->default == 0) {
+            $testDemo->default = 0;
+        } else {
+            TestDemo::where('default', 1)->update(['default' => null]);
+        }
+
+        $testDemo->default = $request->default;
 
 
         if ($request->status == 0) {
@@ -208,7 +230,7 @@ class TestDemoController extends Controller
 
         $testDemo->save();
 
-        return redirect()->route('testDemos.index')->with(
+        return redirect()->route('test-demos.index')->with(
             [
                 'message_store' => 'TestDemo Updated Successfully'
             ]
@@ -223,7 +245,7 @@ class TestDemoController extends Controller
         $testDemo  = TestDemo::findOrFail(decrypt($id));
         $testDemo->delete();
 
-        return redirect()->route('testDemos.index')->with(
+        return redirect()->route('test-demos.index')->with(
             [
                 'message_update' => 'TestDemo Delete Successfully'
             ]
@@ -234,7 +256,7 @@ class TestDemoController extends Controller
         $testDemo  = TestDemo::findOrFail(decrypt($id));
         $testDemo->forceDelete();
 
-        return redirect()->route('testDemos.index')->with(
+        return redirect()->route('test-demos.index')->with(
             [
                 'message_update' => 'TestDemo Force Delete Successfully'
             ]
@@ -244,7 +266,7 @@ class TestDemoController extends Controller
     {
         $testDemo  = TestDemo::withTrashed()->findOrFail($id);
         $testDemo->restore();
-        return redirect()->route('testDemos.index')->with(
+        return redirect()->route('test-demos.index')->with(
             [
                 'message_update' => 'TestDemo Restored Successfully'
             ]
