@@ -76,30 +76,6 @@ class TestDemoController extends Controller
                 return $testDemo->id;
             })
 
-            // ->addColumn('action', function (TestDemo $testDemo) {
-            //     $action =
-            //         '
-            //         <div class="btn-group">
-            //             <button type="button" class="btn btn-info">Action</button>
-            //             <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" ></button>
-            //             <div class="dropdown-menu" role="menu">
-            //             <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2" title="View Details"><i class="fa-solid fa fa-eye text-success"></i></a>
-            //             <a href="' . route('test-demos.pdf', encrypt($testDemo->id)) . '" class="ml-2" title="View PDF"><i class="fa-solid fa-file-pdf"></i></a>
-            //             <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2" title="Edit"><i class="fa-solid fa-edit text-warning"></i></a>
-            //             <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" type="submit" title="Soft Delete"><i
-            //                     class="fa-solid fa-eraser text-danger"></i>
-            //             </button>
-            //             <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit" title="Hard Delete"><i
-            //                     class="fa-solid fa-trash-can text-danger"></i>
-            //             </button>'
-            //     if ($testDemo->deleted_at) {
-            //         '<a href="' . route('test-demos.restore', encrypt($testDemo->id)) . '" class="ml-2" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></a>';
-            //     }
-            //     '</div>
-            //         </div>
-            //         ';
-            //     return $action;
-            // })
             ->addColumn('action', function (TestDemo $testDemo) {
                 $action = '
                     <div class="btn-group">
@@ -111,11 +87,11 @@ class TestDemoController extends Controller
                 if ($testDemo->deleted_at == null) {
                     $action .= '
                     <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2" title="Edit"><i class="fa-solid fa-edit text-warning"></i></a>
-                    <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" type="submit" title="Soft Delete"><i class="fa-solid fa-eraser text-danger"></i></button>';
+                    <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-default="' . $testDemo->default . '" type="submit" title="Soft Delete"><i class="fa-solid fa-eraser text-danger"></i></button>';
                 }
 
                 $action .= '
-                            <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit" title="Hard Delete"><i class="fa-solid fa-trash-can text-danger"></i></button>';
+                            <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-default="' . $testDemo->default . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit" title="Hard Delete"><i class="fa-solid fa-trash-can text-danger"></i></button>';
 
                 if ($testDemo->deleted_at) {
                     $action .= '<a href="' . route('test-demos.restore', encrypt($testDemo->id)) . '" class="ml-2" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></a>';
@@ -134,9 +110,6 @@ class TestDemoController extends Controller
             ->toJson();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('back_end.test.demos.create')->with(
@@ -149,9 +122,6 @@ class TestDemoController extends Controller
         );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreAndUpdateTestDemoRequest $request)
     {
         $testDemo = new TestDemo();
@@ -187,13 +157,13 @@ class TestDemoController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($testDemo)
     {
+
+
         $testDemo = TestDemo::withTrashed()->find(decrypt($testDemo));
         $activityLog = Activity::where('subject_id', $testDemo->id)
+            ->where('subject_type', 'App\Models\TestDemo')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -209,9 +179,6 @@ class TestDemoController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($testDemo)
     {
         $testDemo = TestDemo::withTrashed()->find(decrypt($testDemo));
@@ -226,19 +193,10 @@ class TestDemoController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(StoreAndUpdateTestDemoRequest $request, $id)
     {
         $id = decrypt($id);
-        // $this->validate($request, [
-        //     'name' => 'required',
-        //     'code' => "required|unique:test_demos,code,$id",
-        // ]);
         $testDemo = TestDemo::find($id);
-
-        // dd($request->all);
 
         $testDemo->code  = $request->code;
         $testDemo->name = $request->name;
@@ -270,9 +228,6 @@ class TestDemoController extends Controller
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $testDemo  = TestDemo::findOrFail(decrypt($id));
@@ -286,17 +241,31 @@ class TestDemoController extends Controller
     }
     public function forceDestroy($id)
     {
-        $testDemo  = TestDemo::findOrFail(decrypt($id));
-        $testDemo->forceDelete();
 
-        return redirect()->route('test-demos.index')->with(
-            [
-                'message_update' => 'TestDemo Force Delete Successfully'
-            ]
-        );
+        // $testDemo  = TestDemo::findOrFail(decrypt($id));
+        // $testDemo->forceDelete();
+
+        // return redirect()->route('test-demos.index')->with(
+        //     [
+        //         'message_update' => 'TestDemo Force Delete Successfully'
+        //     ]
+        // );
+
+
+        // Decrypt the ID and find the TestDemo model
+        $testDemo = TestDemo::findOrFail(decrypt($id));
+
+        if (is_null($testDemo->default)) {
+            $testDemo->forceDelete();
+            return redirect()->route('test-demos.index')->with('message_update', 'TestDemo Hard Deleted Successfully');
+        }
+
+        return back()->withErrors(['default' => 'Please change the Default value before "Hard Deleting".']);
+
     }
     public function restore($id)
     {
+
         $testDemo  = TestDemo::withTrashed()->findOrFail(decrypt($id));
         $testDemo->restore();
         return redirect()->route('test-demos.index')->with(

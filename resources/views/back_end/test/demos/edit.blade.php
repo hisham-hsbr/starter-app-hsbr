@@ -32,6 +32,7 @@
             </div>
             <!-- left column -->
             <div class="col-md-10">
+                <div> This item is {!! $testDemo->status_with_icon !!}</div>
                 @can('{{ N }} Edit')
                     <form role="form" action="{{ route($routeName . '.update', encrypt($testDemo->id)) }}" method="post"
                         enctype="multipart/form-data" id="quickForm">
@@ -61,6 +62,7 @@
                                     <input type="checkbox" class="form-check-input" name="default" value="1" id="default"
                                         @if ($testDemo->default == 1) {{ 'checked' }} @endif />
                                     <label class="form-check-label" for="default">Is Default</label>
+                                    <br>
                                     @if ($errors->has('default'))
                                         <span class="text-danger">{{ $errors->first('default') }}</span>
                                     @endif
@@ -83,46 +85,48 @@
                                 @endif
                             </div>
                         </div>
+
                         <!-- /.card-body -->
                         <div class="">
-                            @if ($testDemo->deleted_at)
-                                <a type="button" href="{{ route($routeName . '.restore', encrypt($testDemo->id)) }}"
-                                    class="float-right ml-1 btn btn-success">Restore</a>
-                                <form action="{{ route($routeName . '.force.destroy', encrypt($testDemo->id)) }}"
-                                    method="POST" class="float-right ml-1">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fa-solid fa-trash-can"></i> Hard Delete
-                                    </button>
-                                </form>
-                            @endif
-                            @if ($testDemo->deleted_at == null)
-                                <form action="{{ route($routeName . '.destroy', encrypt($testDemo->id)) }}" method="POST"
-                                    class="float-right ml-1">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fa-solid fa-eraser"></i> Soft Delete
-                                    </button>
-                                </form>
-                            @endif
                             @can('{{ $permissionName }} Edit')
                                 <button type="submit" class="float-right ml-1 btn btn-primary">Update</button>
                             @endcan
                             <a type="button" href="{{ route($routeName . '.index') }}"
                                 class="float-right ml-1 btn btn-warning">Back</a>
-                        </div>
-                        <!-- /.card-footer -->
                     </form>
-                @endcan
+                    @if ($testDemo->deleted_at)
+                        <a type="button" href="{{ route($routeName . '.restore', encrypt($testDemo->id)) }}"
+                            class="float-right ml-1 btn btn-success">Restore</a>
+                    @else
+                        <form action="{{ route($routeName . '.destroy', encrypt($testDemo->id)) }}" method="POST"
+                            class="float-right ml-1">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Soft Delete
+                            </button>
+                        </form>
+                    @endif
 
-            </div>
-            <!--/.col (left) -->
+                    <form id="delete-form" action="{{ route($routeName . '.force.destroy', encrypt($testDemo->id)) }}"
+                        method="POST" class="float-right ml-1">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                            <i class="fa-solid fa-trash-can"></i> Hard Delete
+                        </button>
+                    </form>
+
+                </div>
+                <!-- /.card-footer -->
+            @endcan
 
         </div>
+        <!--/.col (left) -->
 
-        <!-- /.row -->
+    </div>
+
+    <!-- /.row -->
     </div><!-- /.container-fluid -->
 
 

@@ -50,62 +50,61 @@ class SettingsController extends Controller
         $settingss = Settings::all();
         return Datatables::of($settingss)
 
-        ->setRowId(function ($settings) {
-            return $settings->id;
+            ->setRowId(function ($settings) {
+                return $settings->id;
             })
 
             ->editColumn('status', function (Settings $settings) {
 
-                $active='<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
-                $inActive='<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
+                $active = '<span style="background-color: #04AA6D;color: white;padding: 3px;width:100px;">Active</span>';
+                $inActive = '<span style="background-color: #ff9800;color: white;padding: 3px;width:100px;">In Active</span>';
 
                 $activeId = ($settings->status);
 
-                    if($activeId==1){
-                        $activeId = $active;
-                    }
-                    else {
-                        $activeId = $inActive;
-                    }
-                    return $activeId;
+                if ($activeId == 1) {
+                    $activeId = $active;
+                } else {
+                    $activeId = $inActive;
+                }
+                return $activeId;
             })
 
 
-        ->editColumn('created_by', function (Settings $settings) {
+            ->editColumn('created_by', function (Settings $settings) {
 
-            return ucwords($settings->CreatedBy->name);
-        })
+                return ucwords($settings->CreatedBy->name);
+            })
 
 
-        ->editColumn('updated_by', function (Settings $settings) {
+            ->editColumn('updated_by', function (Settings $settings) {
 
-            return ucwords($settings->UpdatedBy->name);
-        })
-        ->addColumn('created_at', function (Settings $settings) {
-            return $settings->created_at->format('d-M-Y h:m');
-        })
-        ->addColumn('updated_at', function (Settings $settings) {
+                return ucwords($settings->UpdatedBy->name);
+            })
+            ->addColumn('created_at', function (Settings $settings) {
+                return $settings->created_at->format('d-M-Y h:m');
+            })
+            ->addColumn('updated_at', function (Settings $settings) {
 
-            return $settings->updated_at->format('d-M-Y h:m');
-        })
+                return $settings->updated_at->format('d-M-Y h:m');
+            })
 
-        ->addColumn('editLink', function (Settings $settings) {
+            ->addColumn('editLink', function (Settings $settings) {
 
-            $editLink ='<a href="'. route('Settingss.edit', $settings->id) .'" class="ml-2"><i class="fa-solid fa-edit"></i></a>';
-               return $editLink;
-        })
-        ->addColumn('deleteLink', function (Settings $settings) {
-           $CSRFToken = "csrf_field()";
-            $deleteLink ='
-                        <button class="btn btn-link delete-settings" data-settings_id="'.$settings->id.'" type="submit"><i
+                $editLink = '<a href="' . route('Settingss.edit', $settings->id) . '" class="ml-2"><i class="fa-solid fa-edit"></i></a>';
+                return $editLink;
+            })
+            ->addColumn('deleteLink', function (Settings $settings) {
+                $CSRFToken = "csrf_field()";
+                $deleteLink = '
+                        <button class="btn btn-link delete-settings" data-settings_id="' . $settings->id . '" type="submit"><i
                                 class="fa-solid fa-trash-can text-danger"></i>
                         </button>';
-               return $deleteLink;
-        })
+                return $deleteLink;
+            })
 
 
-       ->rawColumns(['status','editLink','deleteLink'])
-        ->toJson();
+            ->rawColumns(['status', 'editLink', 'deleteLink'])
+            ->toJson();
     }
 
     /**
@@ -134,10 +133,9 @@ class SettingsController extends Controller
         $settings->name = $request->name;
 
 
-        if ($request->status==0)
-            {
-                $settings->status==0;
-            }
+        if ($request->status == 0) {
+            $settings->status == 0;
+        }
 
         $settings->status = $request->status;
 
@@ -162,7 +160,7 @@ class SettingsController extends Controller
 
         return view('back_end.test.demos.show')->with(
             [
-                'testDemo' => $testDemo
+                'settings' => $settings,
             ]
         );
     }
@@ -176,7 +174,7 @@ class SettingsController extends Controller
 
         return view('back_end.test.demos.edit')->with(
             [
-                'testDemo' => $testDemo
+                'settings,' => $settings,
             ]
         );
     }
@@ -184,7 +182,7 @@ class SettingsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -197,10 +195,9 @@ class SettingsController extends Controller
         $settings->name = $request->name;
 
 
-        if ($request->status==0)
-            {
-                $settings->status==0;
-            }
+        if ($request->status == 0) {
+            $settings->status == 0;
+        }
 
         $settings->status = $request->status;
 
@@ -218,7 +215,7 @@ class SettingsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-   public function destroy($id)
+    public function destroy($id)
     {
         $settings  = Settings::findOrFail($id);
         $settings->delete();
