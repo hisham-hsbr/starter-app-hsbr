@@ -85,6 +85,28 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="">
+                            @if ($testDemo->deleted_at)
+                                <a type="button" href="{{ route($routeName . '.restore', encrypt($testDemo->id)) }}"
+                                    class="float-right ml-1 btn btn-success">Restore</a>
+                                <form action="{{ route($routeName . '.force.destroy', encrypt($testDemo->id)) }}"
+                                    method="POST" class="float-right ml-1">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fa-solid fa-trash-can"></i> Hard Delete
+                                    </button>
+                                </form>
+                            @endif
+                            @if ($testDemo->deleted_at == null)
+                                <form action="{{ route($routeName . '.destroy', encrypt($testDemo->id)) }}" method="POST"
+                                    class="float-right ml-1">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fa-solid fa-eraser"></i> Soft Delete
+                                    </button>
+                                </form>
+                            @endif
                             @can('{{ $permissionName }} Edit')
                                 <button type="submit" class="float-right ml-1 btn btn-primary">Update</button>
                             @endcan

@@ -35,6 +35,7 @@
                     <div class="card-body">
                         <!-- /.card-header -->
                         <!-- form start -->
+                        <div> This item is {!! $testDemo->status_with_icon !!}</div>
                         <div class="card-body">
                             <div style="border-style: groove;" class="p-3 form-group row">
                                 @can('{{ $permissionName }} Read Name')
@@ -47,6 +48,13 @@
                                     <div class="col-sm-6">
                                         <label class="col-sm-4">Local Name</label>
                                         <label><code>: {{ $testDemo->name }}</code></label>
+                                    </div>
+                                @endcan
+
+                                @can('{{ $permissionName }} Read Local Name')
+                                    <div class="col-sm-6">
+                                        <label class="col-sm-4">Status</label>
+                                        <label><code>: {{ $testDemo->status }}</code></label>
                                     </div>
                                 @endcan
                                 @can('{{ $permissionName }} Read Created At')
@@ -67,12 +75,13 @@
 
 
                     <!-- /.card-body -->
+
                     <div class="">
                         @can('Mobile Service Pdf')
-                            <a type="button" href="{{ route($routeName . '.pdf', $testDemo->id) }}"
+                            <a type="button" href="{{ route($routeName . '.pdf', encrypt($testDemo->id)) }}"
                                 class="float-right ml-1 btn btn-info"><i class="fa-solid fa-file-pdf"></i> PDF</a>
                         @endcan
-                        <a type="button" href="{{ route($routeName . '.edit', $testDemo->id) }}"
+                        <a type="button" href="{{ route($routeName . '.edit', encrypt($testDemo->id)) }}"
                             class="float-right ml-1 btn btn-primary">Edit</a>
                         <a type="button" href="{{ route($routeName . '.index') }}"
                             class="float-right ml-1 btn btn-warning">Back</a>
@@ -99,7 +108,7 @@
                 <tbody>
                     @foreach ($activityLog as $a)
                         <tr>
-                            <td>-</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $a->description }}</td>
                             <td>{{ $a->event }}</td>
                             <td>{{ $a->activityUser->name }}</td>
@@ -164,8 +173,7 @@
     <x-back-end.plugins.dataTable-footer />
     <script>
         $(function() {
-            $("#example1")
-                .DataTable({
+            $("#example1").DataTable({
                     responsive: true,
                     lengthChange: false,
                     autoWidth: false,
