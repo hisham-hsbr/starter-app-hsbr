@@ -21,11 +21,9 @@
 @section('actionTitle')
     {{ ucwords(__('my.index')) }}
 @endsection
-<x-test-component />
 
 @section('mainContent')
     <section class="content">
-
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
@@ -195,7 +193,6 @@
     <x-back-end.message.message />
     <x-back-end.script.table-update />
     <x-back-end.plugins.dataTable-footer />
-
 
     <script>
         $(function() {

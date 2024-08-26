@@ -50,14 +50,23 @@ class TestDemoController extends Controller
         $createdByUsers = $testDemos->sortBy('created_by')->pluck('created_by')->unique();
         $updatedByUsers = $testDemos->sortBy('updated_by')->pluck('updated_by')->unique();
 
+        $defaultCount = TestDemo::withTrashed()->where('default', 1)->count();
+        $message_warning = null; // Initialize the message variable
+
+        if ($defaultCount > 1) {
+            $message_warning = "Default Count is more than " . $defaultCount;
+        }
+
         return view('back_end.test.demos.index')->with(
             [
                 'headName' => $this->headName,
                 'routeName' => $this->routeName,
                 'permissionName' => $this->permissionName,
                 'testDemos' => $testDemos,
+                'defaultCount' => $defaultCount,
                 'createdByUsers' => $createdByUsers,
                 'updatedByUsers' => $updatedByUsers,
+                'message_update' => $message_warning,
             ]
         );
     }
@@ -67,34 +76,41 @@ class TestDemoController extends Controller
 
         // $testDemos = TestDemo::active()->get();
         // $testDemos = TestDemo::all();
+        // Calculate the default count
+        $defaultCount = TestDemo::withTrashed()->where('default', 1)->count();
         $testDemos = TestDemo::withTrashed()->get();
 
 
         return Datatables::of($testDemos)
-
             ->setRowId(function ($testDemo) {
                 return $testDemo->id;
             })
 
+            // Add row class based on condition
+            ->setRowClass(function ($testDemo) use ($defaultCount) {
+                return ($defaultCount > 1 && $testDemo->default == 1) ? 'text-danger' : '';
+            })
+
             ->addColumn('action', function (TestDemo $testDemo) {
+
                 $action = '
                     <div class="btn-group">
                         <button type="button" class="btn btn-info">Action</button>
                         <button type="button" class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown"></button>
                         <div class="dropdown-menu" role="menu">
                             <a href="' . route('test-demos.show', encrypt($testDemo->id)) . '" class="ml-2" title="View Details"><i class="fa-solid fa fa-eye text-success"></i></a>
-                            <a href="' . route('test-demos.pdf', encrypt($testDemo->id)) . '" class="ml-2" title="View PDF"><i class="fa-solid fa-file-pdf"></i></a>';
+                            <a href="' . route('test-demos.pdf', encrypt($testDemo->id)) . '" class="ml-2" title="View PDF"><i class="fa-solid fa-file-pdf"></i></a>
+                            <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2" title="Edit"><i class="fa-solid fa-edit text-warning"></i></a>';
                 if ($testDemo->deleted_at == null) {
                     $action .= '
-                    <a href="' . route('test-demos.edit', encrypt($testDemo->id)) . '" class="ml-2" title="Edit"><i class="fa-solid fa-edit text-warning"></i></a>
-                    <button class="btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-default="' . $testDemo->default . '" type="submit" title="Soft Delete"><i class="fa-solid fa-eraser text-danger"></i></button>';
+                    <button class="mb-1 btn btn-link delete-item_delete" data-item_delete_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-default="' . $testDemo->default . '" type="submit" title="Soft Delete"><i class="fa-solid fa-eraser text-danger"></i></button>';
                 }
 
                 $action .= '
-                            <button class="btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-default="' . $testDemo->default . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit" title="Hard Delete"><i class="fa-solid fa-trash-can text-danger"></i></button>';
+                            <button class="mb-1 btn btn-link delete-item_delete_force" data-item_delete_force_id="' . encrypt($testDemo->id) . '" data-value="' . $testDemo->name . '" data-default="' . $testDemo->default . '" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" type="submit" title="Hard Delete"><i class="fa-solid fa-trash-can text-danger"></i></button>';
 
                 if ($testDemo->deleted_at) {
-                    $action .= '<a href="' . route('test-demos.restore', encrypt($testDemo->id)) . '" class="ml-2" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></a>';
+                    $action .= '<a href="' . route('test-demos.restore', encrypt($testDemo->id)) . '" class="" title="Restore"><i class="fa-solid fa-trash-arrow-up"></i></a>';
                 }
 
                 $action .= '
@@ -109,6 +125,7 @@ class TestDemoController extends Controller
             ->rawColumns(['action', 'status_with_icon'])
             ->toJson();
     }
+
 
     public function create()
     {
@@ -196,7 +213,7 @@ class TestDemoController extends Controller
     public function update(StoreAndUpdateTestDemoRequest $request, $id)
     {
         $id = decrypt($id);
-        $testDemo = TestDemo::find($id);
+        $testDemo = TestDemo::withTrashed()->find($id);
 
         $testDemo->code  = $request->code;
         $testDemo->name = $request->name;
@@ -205,7 +222,7 @@ class TestDemoController extends Controller
         if ($request->default == 0) {
             $testDemo->default = 0;
         } else {
-            TestDemo::where('default', 1)->update(['default' => null]);
+            TestDemo::withTrashed()->where('default', 1)->update(['default' => null]);
         }
 
         $testDemo->default = $request->default;
@@ -218,26 +235,40 @@ class TestDemoController extends Controller
         $testDemo->status = $request->status;
 
         $testDemo->updated_by = Auth::user()->id;
-
         $testDemo->save();
+        // dd($testDemo);
+
+        $defaultCount = TestDemo::withTrashed()->where('default', 1)->count();
+        $message_warning = null; // Initialize the message variable
+        $message_error = null; // Initialize the message variable
+
+        if ($defaultCount > 1) {
+            $message_warning = "Default Count is more than " . $defaultCount;
+        }
+        if ($defaultCount == 0) {
+            $message_error = "Please set a Default value";
+        }
 
         return redirect()->route('test-demos.index')->with(
             [
-                'message_store' => 'TestDemo Updated Successfully'
+                'message_store' => 'TestDemo Updated Successfully',
+                'message_warning' => $message_warning,
+                'message_error' => $message_error,
             ]
         );
     }
 
     public function destroy($id)
     {
-        $testDemo  = TestDemo::findOrFail(decrypt($id));
-        $testDemo->delete();
+        // Decrypt the ID and find the TestDemo model
+        $testDemo = TestDemo::findOrFail(decrypt($id));
 
-        return redirect()->route('test-demos.index')->with(
-            [
-                'message_update' => 'TestDemo Delete Successfully'
-            ]
-        );
+        if (is_null($testDemo->default)) {
+            $testDemo->delete();
+            return redirect()->route('test-demos.index')->with('message_update', 'TestDemo Soft Deleted Successfully');
+        }
+
+        return back()->withErrors(['default' => 'Please change the Default value before "Soft Deleting".']);
     }
     public function forceDestroy($id)
     {
@@ -253,7 +284,7 @@ class TestDemoController extends Controller
 
 
         // Decrypt the ID and find the TestDemo model
-        $testDemo = TestDemo::findOrFail(decrypt($id));
+        $testDemo = TestDemo::withTrashed()->findOrFail(decrypt($id));
 
         if (is_null($testDemo->default)) {
             $testDemo->forceDelete();
@@ -261,7 +292,6 @@ class TestDemoController extends Controller
         }
 
         return back()->withErrors(['default' => 'Please change the Default value before "Hard Deleting".']);
-
     }
     public function restore($id)
     {

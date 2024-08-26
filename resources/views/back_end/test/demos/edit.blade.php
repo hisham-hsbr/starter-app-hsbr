@@ -21,7 +21,6 @@
 @section('actionTitle')
     {{ ucwords(__('my.edit')) }}
 @endsection
-<x-test-component />
 
 @section('mainContent')
     <div class="container-fluid">
@@ -58,7 +57,7 @@
                                     input_value="{{ $testDemo->local_name }}{{ old('local_name') }}"
                                     input_placeholder="Enter local_name" />
 
-                                <div class="col-sm-10 pl-5 pt-2">
+                                <div class="pt-2 pl-5 col-sm-10">
                                     <input type="checkbox" class="form-check-input" name="default" value="1" id="default"
                                         @if ($testDemo->default == 1) {{ 'checked' }} @endif />
                                     <label class="form-check-label" for="default">Is Default</label>
@@ -76,7 +75,7 @@
 
                         <div class="card-body">
                             <!-- /.card-header -->
-                            <div class="col-sm-10 pl-5 pt-2">
+                            <div class="pt-2 pl-5 col-sm-10">
                                 <input type="checkbox" class="form-check-input" name="status" value="1" id="status"
                                     @if ($testDemo->status == 'Active') {{ 'checked' }} @endif />
                                 <label class="form-check-label" for="status">Active</label><br>
@@ -102,7 +101,11 @@
                             class="float-right ml-1">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
+                            {{-- <button type="submit" class="btn btn-danger">
+                                <i class="fa-solid fa-eraser"></i> Soft Delete
+                            </button> --}}
+                            <!-- Trigger button for modal (can be hidden) -->
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
                                 <i class="fa-solid fa-eraser"></i> Soft Delete
                             </button>
                         </form>
@@ -112,8 +115,12 @@
                         method="POST" class="float-right ml-1">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                        {{-- <button type="button" class="btn btn-danger">
                             <i class="fa-solid fa-trash-can"></i> Hard Delete
+                        </button> --}}
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#confirmHardDeleteModal">
+                            <i class="fa-solid fa-eraser"></i> Hard Delete
                         </button>
                     </form>
 
@@ -129,6 +136,61 @@
     <!-- /.row -->
     </div><!-- /.container-fluid -->
 
+    <!-- Modal HTML -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to "Delete" this item?.
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="{{ route($routeName . '.destroy', encrypt($testDemo->id)) }}"
+                        method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirmHardDeleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="confirmHardDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmHardDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to "Force Delete" this item? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="{{ route($routeName . '.force.destroy', encrypt($testDemo->id)) }}"
+                        method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 @endsection
 @section('actionFooter', 'Footer')
@@ -140,6 +202,23 @@
 
     <x-back-end.plugins.jquery-validation-footer />
     <x-back-end.script.status-default-value-changing />
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteForm = document.getElementById('deleteForm');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            const confirmCheck = document.getElementById('confirmCheck');
+
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (confirmCheck.checked) {
+                    deleteForm.submit();
+                } else {
+                    alert('Please confirm that you understand this action cannot be undone.');
+                }
+            });
+        });
+    </script>
 
 
 
