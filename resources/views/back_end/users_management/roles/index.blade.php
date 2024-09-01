@@ -21,7 +21,6 @@
 @section('actionTitle')
     {{ ucwords(__('my.index')) }}
 @endsection
-<x-test-component />
 
 @section('mainContent')
     <section class="content">

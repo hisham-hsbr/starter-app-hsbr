@@ -21,7 +21,7 @@ class TestDemo extends Model
 
     protected $fillable = [
         'name',
-        'status'
+        'status',
     ];
     protected $casts = [
         'created_at' => TimeZoneCast::class,

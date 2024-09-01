@@ -21,7 +21,6 @@
 @section('actionTitle')
     {{ ucwords(__('my.show')) }}
 @endsection
-<x-test-component />
 
 @section('mainContent')
     <div class="container-fluid">
