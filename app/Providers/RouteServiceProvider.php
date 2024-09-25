@@ -30,7 +30,7 @@ class RouteServiceProvider extends ServiceProvider
         $run_seeder_disable = env('RUN_SEEDER_DISABLE');
 
         if ($run_seeder_disable == 'Y') {
-            require __DIR__ . '/view_share.php';
+            // require __DIR__ . '/view_share.php';
         }
 
 

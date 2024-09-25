@@ -16,7 +16,9 @@ class TimeZoneCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $timeZone = Auth::user()->timeZone->time_zone;
+        $user = Auth::user();
+        $timeZone = $user && $user->timeZone ? $user->timeZone->time_zone : 'UTC'; // Default to 'UTC' or any other fallback
+
         return Carbon::parse($value)->setTimezone($timeZone)->format('d-M-Y h:i A');
     }
 

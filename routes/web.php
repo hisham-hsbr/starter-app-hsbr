@@ -28,6 +28,7 @@ Route::controller('TestDemoController')->prefix('/test/demos')->name('test-demos
     Route::get('/download', 'testDemosDownload')->name('download');
 
     Route::get('/demo1', 'demo1')->name('demo1');
+    Route::get('/check', 'check')->name('check');
 });
 
 

@@ -1,5 +1,5 @@
-    @if (Session::has('message_store'))
+    @if (Session::has('message_warning'))
         <script>
-            toastr.warning("{!! Session::get('message_store') !!}");
+            toastr.warning("{!! Session::get('message_warning') !!}");
         </script>
     @endif

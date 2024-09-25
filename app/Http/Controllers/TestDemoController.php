@@ -50,12 +50,22 @@ class TestDemoController extends Controller
         $createdByUsers = $testDemos->sortBy('created_by')->pluck('created_by')->unique();
         $updatedByUsers = $testDemos->sortBy('updated_by')->pluck('updated_by')->unique();
 
+
+
         $defaultCount = TestDemo::withTrashed()->where('default', 1)->count();
-        $message_warning = null; // Initialize the message variable
+
+        $message_error = null; // Initialize the message variable
 
         if ($defaultCount > 1) {
-            $message_warning = "Default Count is more than " . $defaultCount;
+            $message_error = "Default Count is more than " . $defaultCount;
+            session()->flash('message_error', $message_error);
         }
+
+        if ($defaultCount == 0) {
+            $message_error = "Please set a Default value";
+            session()->flash('message_error', $message_error);
+        }
+
 
         return view('back_end.test.demos.index')->with(
             [
@@ -66,7 +76,7 @@ class TestDemoController extends Controller
                 'defaultCount' => $defaultCount,
                 'createdByUsers' => $createdByUsers,
                 'updatedByUsers' => $updatedByUsers,
-                'message_update' => $message_warning,
+                'message_error' => $message_error,
             ]
         );
     }
@@ -209,6 +219,35 @@ class TestDemoController extends Controller
             ]
         );
     }
+    public function check()
+    {
+        // $testDemo = TestDemo::withTrashed()->all();
+
+        $defaultCount = TestDemo::withTrashed()->where('default', 1)->count();
+        $default_more_than = null; // Initialize the message variable
+        $default_not_set = null; // Initialize the message variable
+
+        if ($defaultCount > 1) {
+            $default_more_than = "Default Count is more than " . $defaultCount;
+        }
+        if ($defaultCount == 0) {
+            // TestDemo::where('status', 1)->limit(1)->update(['default' => 1]);
+
+
+            $default_not_set = "Not set Default value";
+        }
+        // return redirect()->route('test-demos.check')->with(
+        return view('back_end.test.demos.check')->with(
+            [
+                'headName' => $this->headName,
+                'routeName' => $this->routeName,
+                'permissionName' => $this->permissionName,
+                'message_store' => 'TestDemo Updated Successfully',
+                'default_more_than' => $default_more_than,
+                'default_not_set' => $default_not_set,
+            ]
+        );
+    }
 
     public function update(StoreAndUpdateTestDemoRequest $request, $id)
     {
@@ -239,21 +278,23 @@ class TestDemoController extends Controller
         // dd($testDemo);
 
         $defaultCount = TestDemo::withTrashed()->where('default', 1)->count();
-        $message_warning = null; // Initialize the message variable
         $message_error = null; // Initialize the message variable
+        $message_warning = null; // Initialize the message variable
 
         if ($defaultCount > 1) {
-            $message_warning = "Default Count is more than " . $defaultCount;
+            $message_error = "Default Count is more than " . $defaultCount;
         }
         if ($defaultCount == 0) {
-            $message_error = "Please set a Default value";
-        }
+            TestDemo::where('status', 1)->limit(1)->update(['default' => 1]);
 
+
+            $message_warning = "Default value Automatic Selected first Active One";
+        }
         return redirect()->route('test-demos.index')->with(
             [
                 'message_store' => 'TestDemo Updated Successfully',
-                'message_warning' => $message_warning,
                 'message_error' => $message_error,
+                'message_warning' => $message_warning,
             ]
         );
     }

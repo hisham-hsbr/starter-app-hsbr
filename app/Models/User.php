@@ -32,7 +32,7 @@ implements MustVerifyEmail
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'last_name', 'dob', 'phone1', 'phone2', 'gender', 'avatar', 'email', 'status', 'blood.name', 'cityName.city', 'timeZone.time_zone', 'created_at', 'updated_at'])
+            ->logOnly(['name', 'last_name', 'dob', 'phone1', 'phone2', 'gender', 'avatar', 'email', 'status', 'cityName.city', 'timeZone.time_zone', 'created_at', 'updated_at'])
             ->setDescriptionForEvent(fn(string $eventName) => "This User has been {$eventName}")
             ->useLogName('User')
             ->logOnlyDirty();
@@ -70,14 +70,25 @@ implements MustVerifyEmail
 
     public function getCreatedAtAttribute()
     {
-        $time_zone = Auth::user()->timeZone->time_zone;
-        return Carbon::parse($this->attributes['created_at'])->setTimezone($time_zone);
+
+        if (Auth::check() && Auth::user()->timeZone) {
+            $time_zone = Auth::user()->timeZone->time_zone;
+            return Carbon::parse($this->attributes['created_at'])->setTimezone($time_zone);
+        }
+
+        // Fallback if the user is not authenticated or timeZone is null
+        return $this->attributes['created_at'];
     }
 
     public function getUpdatedAtAttribute()
     {
-        $time_zone = Auth::user()->timeZone->time_zone;
-        return Carbon::parse($this->attributes['updated_at'])->setTimezone($time_zone);
+        if (Auth::check() && Auth::user()->timeZone) {
+            $time_zone = Auth::user()->timeZone->time_zone;
+            return Carbon::parse($this->attributes['updated_at'])->setTimezone($time_zone);
+        }
+
+        // Fallback if the user is not authenticated or timeZone is null
+        return $this->attributes['created_at'];
     }
 
     public function getStatusTextAttribute()

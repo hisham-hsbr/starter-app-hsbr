@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $run_seeder_disable = env('RUN_SEEDER_DISABLE');
 
         if ($run_seeder_disable == 'Y') {
-            $settings = Settings::all()->pluck('default_value', 'key');
+            $settings = Settings::all()->pluck('default_value', 'name');
             View::share('settings', $settings);
         }
     }
