@@ -122,9 +122,15 @@
             'dev_requirement' => true,
         ),
         'doctrine/dbal' => array(
+<<<<<<< HEAD
             'pretty_version' => '3.9.1',
             'version' => '3.9.1.0',
             'reference' => 'd7dc08f98cba352b2bab5d32c5e58f7e745c11a7',
+=======
+            'pretty_version' => '3.9.0',
+            'version' => '3.9.0.0',
+            'reference' => 'd8f68ea6cc00912e5313237130b8c8decf4d28c6',
+>>>>>>> 7430b200d216880906b785afce6fb319f7baf4b4
             'type' => 'library',
             'install_path' => __DIR__ . '/../doctrine/dbal',
             'aliases' => array(),
@@ -515,9 +521,15 @@
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(
+<<<<<<< HEAD
             'pretty_version' => 'v1.17.3',
             'version' => '1.17.3.0',
             'reference' => '9d77be916e145864f10788bb94531d03e1f7b482',
+=======
+            'pretty_version' => 'v1.17.2',
+            'version' => '1.17.2.0',
+            'reference' => 'e8a88130a25e3f9d4d5785e6a1afca98268ab110',
+>>>>>>> 7430b200d216880906b785afce6fb319f7baf4b4
             'type' => 'project',
             'install_path' => __DIR__ . '/../laravel/pint',
             'aliases' => array(),
@@ -533,9 +545,15 @@
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
+<<<<<<< HEAD
             'pretty_version' => 'v1.31.3',
             'version' => '1.31.3.0',
             'reference' => '0a7e2891a85eba2d448a9ffc6fc5ce367e924bc1',
+=======
+            'pretty_version' => 'v1.31.1',
+            'version' => '1.31.1.0',
+            'reference' => '3d06dd18cee8059baa7b388af00ba47f6d96bd85',
+>>>>>>> 7430b200d216880906b785afce6fb319f7baf4b4
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/sail',
             'aliases' => array(),
@@ -632,9 +650,15 @@
             'dev_requirement' => false,
         ),
         'maatwebsite/excel' => array(
+<<<<<<< HEAD
             'pretty_version' => '3.1.58',
             'version' => '3.1.58.0',
             'reference' => '18495a71b112f43af8ffab35111a58b4e4ba4a4d',
+=======
+            'pretty_version' => '3.1.56',
+            'version' => '3.1.56.0',
+            'reference' => '0381d0225b42c3f328d90f0dd05ca071fca3953f',
+>>>>>>> 7430b200d216880906b785afce6fb319f7baf4b4
             'type' => 'library',
             'install_path' => __DIR__ . '/../maatwebsite/excel',
             'aliases' => array(),
@@ -854,9 +878,15 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpdoc-parser' => array(
+<<<<<<< HEAD
             'pretty_version' => '1.30.1',
             'version' => '1.30.1.0',
             'reference' => '51b95ec8670af41009e2b2b56873bad96682413e',
+=======
+            'pretty_version' => '1.30.0',
+            'version' => '1.30.0.0',
+            'reference' => '5ceb0e384997db59f38774bf79c2a6134252c08f',
+>>>>>>> 7430b200d216880906b785afce6fb319f7baf4b4
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
@@ -908,9 +938,15 @@
             'dev_requirement' => true,
         ),
         'phpunit/phpunit' => array(
+<<<<<<< HEAD
             'pretty_version' => '10.5.32',
             'version' => '10.5.32.0',
             'reference' => 'f069f46840445d37a4e6f0de8c5879598f9c4327',
+=======
+            'pretty_version' => '10.5.30',
+            'version' => '10.5.30.0',
+            'reference' => 'b15524febac0153876b4ba9aab3326c2ee94c897',
+>>>>>>> 7430b200d216880906b785afce6fb319f7baf4b4
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/phpunit',
             'aliases' => array(),
